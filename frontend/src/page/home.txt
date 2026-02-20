@@ -1,0 +1,257 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { 
+  FaGraduationCap, 
+  FaCode, 
+  FaChartLine, 
+  FaBook,
+  FaYoutube,
+  FaPlayCircle,
+  FaStar,
+  FaUsers,
+  FaInfinity
+} from 'react-icons/fa';
+
+const Home = () => {
+  const categories = [
+    { 
+      icon: FaCode, 
+      name: 'Programming', 
+      color: 'from-blue-500 to-cyan-500',
+      bgColor: 'bg-blue-500/10',
+      textColor: 'text-blue-400',
+      description: 'Learn coding from basics to advanced',
+      query: 'programming'
+    },
+    { 
+      icon: FaChartLine, 
+      name: 'Mathematics', 
+      color: 'from-green-500 to-emerald-500',
+      bgColor: 'bg-green-500/10',
+      textColor: 'text-green-400',
+      description: 'Master algebra, calculus & more',
+      query: 'mathematics'
+    },
+    { 
+      icon: FaBook, 
+      name: 'Science', 
+      color: 'from-purple-500 to-pink-500',
+      bgColor: 'bg-purple-500/10',
+      textColor: 'text-purple-400',
+      description: 'Physics, chemistry & biology',
+      query: 'science'
+    },
+    { 
+      icon: FaGraduationCap, 
+      name: 'Tutorials', 
+      color: 'from-orange-500 to-red-500',
+      bgColor: 'bg-orange-500/10',
+      textColor: 'text-orange-400',
+      description: 'Step-by-step learning guides',
+      query: 'tutorial'
+    },
+  ];
+
+  const features = [
+    {
+      icon: FaYoutube,
+      title: 'Curated Content',
+      description: 'Only videos from approved educational channels',
+      color: 'text-red-400',
+      bgColor: 'bg-red-500/10'
+    },
+    {
+      icon: FaPlayCircle,
+      title: 'No Distractions',
+      description: 'Clean interface focused on learning',
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-500/10'
+    },
+    {
+      icon: FaStar,
+      title: 'High Quality',
+      description: 'Hand-picked educational content',
+      color: 'text-yellow-400',
+      bgColor: 'bg-yellow-500/10'
+    },
+    {
+      icon: FaUsers,
+      title: 'Community',
+      description: 'Learn with like-minded students',
+      color: 'text-green-400',
+      bgColor: 'bg-green-500/10'
+    },
+    {
+      icon: FaInfinity,
+      title: 'Always Free',
+      description: 'No subscriptions, no hidden costs',
+      color: 'text-purple-400',
+      bgColor: 'bg-purple-500/10'
+    }
+  ];
+
+  const trendingTopics = [
+    { name: 'JavaScript', color: 'from-yellow-400 to-yellow-600' },
+    { name: 'Python', color: 'from-blue-400 to-blue-600' },
+    { name: 'React', color: 'from-cyan-400 to-blue-600' },
+    { name: 'Calculus', color: 'from-green-400 to-emerald-600' },
+    { name: 'Physics', color: 'from-purple-400 to-pink-600' },
+    { name: 'AI', color: 'from-red-400 to-orange-600' },
+  ];
+
+  return (
+    <div className="space-y-12">
+      {/* Hero Section with Animated Gradient */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-dark-900 to-dark-950 p-1">
+        <div className="absolute inset-0 bg-gradient-to-r from-accent-blue/20 via-accent-purple/20 to-accent-blue/20 animate-gradient"></div>
+        <div className="relative glass-effect rounded-3xl p-12 text-center">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6">
+            <span className="text-gradient">Learn</span>{' '}
+            <span className="text-white">Without Limits</span>
+          </h1>
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-8">
+            Access curated educational content from the world's best YouTube channels, 
+            all in one place, completely free.
+          </p>
+          <div className="flex flex-wrap gap-4 justify-center">
+            <Link 
+              to="/search" 
+              className="btn-primary text-lg px-8 py-3"
+            >
+              Start Learning Now
+            </Link>
+            <Link 
+              to="/search?q=popular" 
+              className="px-8 py-3 bg-dark-800 hover:bg-dark-700 text-white rounded-lg 
+                       transition-all duration-300 border border-dark-700 hover:border-accent-blue/50"
+            >
+              Browse Popular
+            </Link>
+          </div>
+          
+          {/* Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 pt-8 border-t border-dark-800">
+            <div>
+              <div className="text-3xl font-bold text-gradient">1000+</div>
+              <div className="text-gray-400">Educational Videos</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-gradient">8</div>
+              <div className="text-gray-400">Premium Channels</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-gradient">24/7</div>
+              <div className="text-gray-400">Free Access</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Categories Section */}
+      <div>
+        <h2 className="text-3xl font-bold mb-8">
+          <span className="text-gradient">Browse</span> Categories
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {categories.map((category, index) => {
+            const Icon = category.icon;
+            return (
+              <Link
+                key={index}
+                to={`/search?q=${category.query}`}
+                className="group relative overflow-hidden rounded-2xl bg-dark-900 p-6 
+                         hover:transform hover:scale-105 transition-all duration-500
+                         border border-dark-800 hover:border-transparent"
+              >
+                <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 
+                                group-hover:opacity-10 transition-opacity duration-500`} />
+                <div className={`w-16 h-16 ${category.bgColor} rounded-2xl flex items-center 
+                                justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                  <Icon className={`text-3xl ${category.textColor}`} />
+                </div>
+                <h3 className="text-xl font-semibold mb-2 group-hover:text-white transition-colors">
+                  {category.name}
+                </h3>
+                <p className="text-gray-400 text-sm mb-4">{category.description}</p>
+                <div className={`text-sm ${category.textColor} font-medium`}>
+                  Explore Now →
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Features Section */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-dark-900 to-dark-950 p-1">
+        <div className="absolute inset-0 bg-gradient-to-r from-accent-purple/20 via-accent-blue/20 to-accent-purple/20 animate-gradient"></div>
+        <div className="relative glass-effect rounded-3xl p-12">
+          <h2 className="text-3xl font-bold text-center mb-12">
+            Why Choose <span className="text-gradient">StudyTube</span>?
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => {
+              const Icon = feature.icon;
+              return (
+                <div key={index} className="text-center group">
+                  <div className={`w-20 h-20 ${feature.bgColor} rounded-2xl flex items-center 
+                                  justify-center mx-auto mb-4 group-hover:scale-110 
+                                  transition-transform duration-300`}>
+                    <Icon className={`text-4xl ${feature.color}`} />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
+                  <p className="text-gray-400 text-sm">{feature.description}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Trending Topics */}
+      <div>
+        <h2 className="text-3xl font-bold mb-8">
+          <span className="text-gradient">Trending</span> Topics
+        </h2>
+        <div className="flex flex-wrap gap-4">
+          {trendingTopics.map((topic, index) => (
+            <Link
+              key={index}
+              to={`/search?q=${topic.name.toLowerCase()}`}
+              className={`group relative overflow-hidden rounded-xl bg-gradient-to-r ${topic.color} p-1`}
+            >
+              <div className="relative bg-dark-900 rounded-lg px-6 py-3 group-hover:bg-transparent 
+                            transition-all duration-300">
+                <span className="text-white font-medium">{topic.name}</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* CTA Section */}
+      <div className="relative overflow-hidden rounded-3xl">
+        <div className="absolute inset-0 bg-gradient-to-r from-accent-blue to-accent-purple opacity-90"></div>
+        <div className="relative p-12 text-center">
+          <h2 className="text-3xl font-bold text-white mb-4">
+            Ready to Start Learning?
+          </h2>
+          <p className="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
+            Join thousands of students who are already learning with StudyTube.
+            No subscriptions, no hidden costs - just quality education.
+          </p>
+          <Link 
+            to="/search" 
+            className="inline-block px-8 py-3 bg-white text-accent-blue font-semibold 
+                     rounded-lg hover:shadow-xl hover:shadow-white/20 transform hover:scale-105 
+                     transition-all duration-300"
+          >
+            Get Started Now
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Home;
