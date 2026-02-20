@@ -5,8 +5,11 @@ import VideoCard from '../components/VideoCard';
 import SkeletonCard from '../components/SkeletonCard';
 import { FaSearch, FaFilter, FaTimes, FaCheckCircle } from 'react-icons/fa';
 
-// Configure axios defaults
-axios.defaults.baseURL = 'http://localhost:5000';
+// Use environment variable for API URL, fallback to localhost for development
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+// Configure axios
+axios.defaults.baseURL = API_URL;
 
 const Search = () => {
   const [searchParams] = useSearchParams();
@@ -27,6 +30,8 @@ const Search = () => {
       
       try {
         console.log('Searching for:', query);
+        console.log('Using API URL:', API_URL);
+        
         const response = await axios.get(`/api/search?q=${encodeURIComponent(query)}`);
         console.log('Response:', response.data);
         
@@ -94,7 +99,7 @@ const Search = () => {
           </div>
           <h2 className="text-2xl font-bold text-red-500 mb-3">Oops! Something went wrong</h2>
           <p className="text-gray-400 mb-6">{error}</p>
-          <p className="text-gray-500 mb-4">Make sure the backend server is running on port 5000</p>
+          <p className="text-gray-500 mb-4">API URL: {API_URL}</p>
           <button 
             onClick={() => window.location.reload()}
             className="btn-primary"
