@@ -4,7 +4,6 @@ import { FaSearch, FaClock, FaTrash, FaHistory } from 'react-icons/fa';
 const SearchHistory = ({ query, onSelect, onSearch }) => {
   const [history, setHistory] = useState([]);
 
-  // Load history on mount
   useEffect(() => {
     loadHistory();
   }, []);
@@ -39,14 +38,12 @@ const SearchHistory = ({ query, onSelect, onSearch }) => {
     }
   };
 
-  // Filter history based on current query
   const filteredHistory = query.trim()
     ? history.filter(item => 
         item.query.toLowerCase().includes(query.toLowerCase())
       ).slice(0, 5)
     : history.slice(0, 5);
 
-  // Format time ago
   const timeAgo = (timestamp) => {
     const date = new Date(timestamp);
     const now = new Date();
@@ -64,17 +61,23 @@ const SearchHistory = ({ query, onSelect, onSearch }) => {
   if (filteredHistory.length === 0) return null;
 
   return (
-    <div className="absolute top-full left-0 right-0 mt-2 glass-effect 
-                    rounded-xl shadow-2xl border border-dark-800 z-[9999]
-                    animate-slide-down overflow-hidden">
-      
+    <div 
+      className="absolute top-full left-0 right-0 mt-2 bg-dark-900 
+                rounded-xl shadow-2xl border border-dark-700 
+                overflow-hidden"
+      style={{ 
+        position: 'absolute', 
+        zIndex: 2147483647,
+        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3)'
+      }}
+    >
       {/* Header */}
-      <div className="px-4 py-3 bg-dark-800/80 border-b border-dark-800 
+      <div className="px-4 py-3 bg-dark-800 border-b border-dark-700 
                     flex items-center justify-between">
         <div className="flex items-center gap-2">
           <FaHistory className="text-accent-blue text-sm" />
           <span className="text-xs font-semibold text-gray-300 uppercase tracking-wider">
-            Recent Searches
+            RECENT SEARCHES
           </span>
         </div>
         {history.length > 0 && (
@@ -89,20 +92,20 @@ const SearchHistory = ({ query, onSelect, onSearch }) => {
       </div>
 
       {/* History Items */}
-      <div className="max-h-64 overflow-y-auto bg-dark-900/95">
+      <div className="max-h-64 overflow-y-auto bg-dark-900">
         {filteredHistory.map((item, index) => (
           <div
             key={`${item.query}-${index}`}
             onClick={() => onSelect(item.query)}
             className="group flex items-center justify-between px-4 py-3 
                      hover:bg-dark-800 cursor-pointer transition-all
-                     border-b border-dark-800/50 last:border-0"
+                     border-b border-dark-800 last:border-0"
           >
             <div className="flex items-center gap-3 flex-1 min-w-0">
               <FaSearch className="text-accent-blue text-sm flex-shrink-0" />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-gray-200 truncate">
+                  <span className="text-sm font-medium text-white truncate">
                     {item.query}
                   </span>
                   {item.query.toLowerCase() === query.toLowerCase() && (
@@ -128,7 +131,6 @@ const SearchHistory = ({ query, onSelect, onSearch }) => {
               className="opacity-0 group-hover:opacity-100 text-gray-500 
                        hover:text-red-500 transition-all p-2 rounded-full
                        hover:bg-dark-700"
-              title="Remove from history"
             >
               <FaTrash size={12} />
             </button>
@@ -136,7 +138,7 @@ const SearchHistory = ({ query, onSelect, onSearch }) => {
         ))}
       </div>
 
-      {/* Footer - Quick Search */}
+      {/* Footer */}
       {query.trim() && !filteredHistory.some(item => 
         item.query.toLowerCase() === query.toLowerCase()
       ) && (
@@ -144,7 +146,7 @@ const SearchHistory = ({ query, onSelect, onSearch }) => {
           onClick={onSearch}
           className="px-4 py-3 bg-accent-blue/10 hover:bg-accent-blue/20 
                    cursor-pointer transition-colors border-t border-dark-800
-                   flex items-center gap-2 group"
+                   flex items-center gap-2"
         >
           <FaSearch className="text-accent-blue text-sm" />
           <span className="text-sm text-gray-300">
