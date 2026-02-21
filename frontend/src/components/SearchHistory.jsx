@@ -1,23 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaSearch, FaClock, FaTrash, FaHistory } from 'react-icons/fa';
 
-const SearchHistory = ({ query, onSelect, onSearch, visible, onClose }) => {
+const SearchHistory = ({ query, onSelect, onSearch }) => {
   const [history, setHistory] = useState([]);
-  const dropdownRef = useRef(null);
 
+  // Load history on mount
   useEffect(() => {
     loadHistory();
-    
-    // Click outside to close
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        onClose();
-      }
-    };
-    
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [onClose]);
+  }, []);
 
   const loadHistory = () => {
     try {
@@ -49,22 +39,35 @@ const SearchHistory = ({ query, onSelect, onSearch, visible, onClose }) => {
     }
   };
 
+  // Filter history based on current query
   const filteredHistory = query.trim()
     ? history.filter(item => 
         item.query.toLowerCase().includes(query.toLowerCase())
       ).slice(0, 5)
     : history.slice(0, 5);
 
-  if (!visible || filteredHistory.length === 0) return null;
+  // Format time ago
+  const timeAgo = (timestamp) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const seconds = Math.floor((now - date) / 1000);
+    
+    if (seconds < 60) return 'just now';
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes}m ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h ago`;
+    const days = Math.floor(hours / 24);
+    return `${days}d ago`;
+  };
+
+  if (filteredHistory.length === 0) return null;
 
   return (
-    <div 
-      ref={dropdownRef}
-      className="absolute top-full left-0 right-0 mt-2 glass-effect 
-                rounded-xl shadow-2xl border border-dark-800 z-[100]
-                animate-slide-down overflow-hidden"
-      style={{ maxWidth: '100%' }}
-    >
+    <div className="absolute top-full left-0 right-0 mt-2 glass-effect 
+                    rounded-xl shadow-2xl border border-dark-800 z-[100]
+                    animate-slide-down overflow-hidden">
+      
       {/* Header */}
       <div className="px-4 py-3 bg-dark-800/80 border-b border-dark-800 
                     flex items-center justify-between">
@@ -90,10 +93,7 @@ const SearchHistory = ({ query, onSelect, onSearch, visible, onClose }) => {
         {filteredHistory.map((item, index) => (
           <div
             key={`${item.query}-${index}`}
-            onClick={() => {
-              onSelect(item.query);
-              onClose();
-            }}
+            onClick={() => onSelect(item.query)}
             className="group flex items-center justify-between px-4 py-3 
                      hover:bg-dark-800 cursor-pointer transition-all
                      border-b border-dark-800/50 last:border-0"
@@ -116,12 +116,7 @@ const SearchHistory = ({ query, onSelect, onSearch, visible, onClose }) => {
                   <div className="flex items-center gap-1 mt-1">
                     <FaClock className="text-[10px] text-gray-500" />
                     <span className="text-[10px] text-gray-500">
-                      {new Date(item.timestamp).toLocaleDateString(undefined, {
-                        month: 'short',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })}
+                      {timeAgo(item.timestamp)}
                     </span>
                   </div>
                 )}
@@ -146,10 +141,7 @@ const SearchHistory = ({ query, onSelect, onSearch, visible, onClose }) => {
         item.query.toLowerCase() === query.toLowerCase()
       ) && (
         <div
-          onClick={() => {
-            onSearch();
-            onClose();
-          }}
+          onClick={onSearch}
           className="px-4 py-3 bg-accent-blue/10 hover:bg-accent-blue/20 
                    cursor-pointer transition-colors border-t border-dark-800
                    flex items-center gap-2 group"

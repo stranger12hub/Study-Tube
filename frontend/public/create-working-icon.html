@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Working Favicon</title>
+    <style>
+        body {
+            background: #1a1a1f;
+            color: white;
+            font-family: Arial;
+            text-align: center;
+            padding: 50px;
+        }
+        canvas {
+            border: 2px solid #3b82f6;
+            border-radius: 10px;
+            margin: 20px;
+        }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>StudyTube Icon Generator</h2>
+    <canvas id="iconCanvas" width="64" height="64"></canvas>
+    <br>
+    <button onclick="downloadIcon()">Download favicon.ico</button>
+    <button onclick="downloadPng()">Download favicon.png</button>
+
+    <script>
+        const canvas = document.getElementById('iconCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function drawIcon() {
+            // Clear
+            ctx.clearRect(0, 0, 64, 64);
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, 64, 64);
+            gradient.addColorStop(0, '#3b82f6');
+            gradient.addColorStop(1, '#8b5cf6');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 64, 64);
+            
+            // White play button
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.moveTo(20, 16);
+            ctx.lineTo(44, 32);
+            ctx.lineTo(20, 48);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Graduation cap
+            ctx.fillStyle = '#fbbf24';
+            ctx.fillRect(35, 15, 20, 5);
+            ctx.fillRect(40, 8, 10, 8);
+            
+            // Letter S
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 20px Arial';
+            ctx.fillText('S', 42, 30);
+        }
+
+        drawIcon();
+
+        function downloadIcon() {
+            const link = document.createElement('a');
+            link.download = 'favicon.ico';
+            link.href = canvas.toDataURL('image/x-icon');
+            link.click();
+        }
+
+        function downloadPng() {
+            const link = document.createElement('a');
+            link.download = 'favicon.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
+</body>
+</html>
