@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create PNG Favicon</title>
+    <style>
+        body { background: #1a1a1f; color: white; font-family: Arial; padding: 20px; }
+        canvas { border: 2px solid #3b82f6; border-radius: 10px; margin: 10px; }
+        .icon-grid { display: flex; flex-wrap: wrap; }
+    </style>
+</head>
+<body>
+    <h2>Click each icon to download PNG files</h2>
+    <div class="icon-grid" id="iconGrid"></div>
+
+    <script>
+        const sizes = [16, 32, 48, 64, 96, 128, 192, 256];
+        const iconGrid = document.getElementById('iconGrid');
+
+        sizes.forEach(size => {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            canvas.style.border = '2px solid #3b82f6';
+            canvas.style.borderRadius = '10px';
+            canvas.style.margin = '10px';
+            
+            const ctx = canvas.getContext('2d');
+
+            // Draw background gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#3b82f6');
+            gradient.addColorStop(1, '#8b5cf6');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+
+            // Draw play button triangle
+            ctx.fillStyle = 'white';
+            const triangleSize = size * 0.5;
+            ctx.beginPath();
+            ctx.moveTo(size * 0.3, size * 0.25);
+            ctx.lineTo(size * 0.7, size * 0.5);
+            ctx.lineTo(size * 0.3, size * 0.75);
+            ctx.closePath();
+            ctx.fill();
+
+            // Draw 'S' letter
+            ctx.font = `bold ${size * 0.4}px Arial`;
+            ctx.fillStyle = 'white';
+            ctx.fillText('S', size * 0.6, size * 0.7);
+
+            const div = document.createElement('div');
+            div.style.textAlign = 'center';
+            div.style.margin = '10px';
+            div.appendChild(canvas);
+            
+            const link = document.createElement('a');
+            link.href = '#';
+            link.textContent = `Download ${size}x${size}`;
+            link.onclick = (e) => {
+                e.preventDefault();
+                const downloadLink = document.createElement('a');
+                downloadLink.download = `favicon-${size}x${size}.png`;
+                downloadLink.href = canvas.toDataURL('image/png');
+                downloadLink.click();
+            };
+            
+            div.appendChild(document.createElement('br'));
+            div.appendChild(link);
+            iconGrid.appendChild(div);
+        });
+    </script>
+</body>
+</html>

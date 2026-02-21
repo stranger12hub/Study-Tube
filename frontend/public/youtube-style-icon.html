@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>YouTube Style Icon with Graduation Cap</title>
+    <style>
+        body {
+            background: #f0f0f0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            text-align: center;
+            padding: 30px;
+        }
+        h1 {
+            color: #9333ea;
+            font-size: 32px;
+        }
+        .preview {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+        .icon-box {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(147, 51, 234, 0.3);
+        }
+        canvas {
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin: 10px;
+        }
+        button {
+            background: #9333ea;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #7e22ce;
+        }
+        .download-all {
+            background: #1f2937;
+            padding: 15px 40px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>▶️ YouTube Style Icon (Purple) + 🎓 Graduation Cap</h1>
+    <p>Exactly like YouTube icon but purple with graduation cap instead of text</p>
+
+    <div class="preview">
+        <div class="icon-box">
+            <canvas id="icon64" width="64" height="64"></canvas>
+            <br>
+            <button onclick="downloadIcon(64)">64x64</button>
+        </div>
+        <div class="icon-box">
+            <canvas id="icon128" width="128" height="128"></canvas>
+            <br>
+            <button onclick="downloadIcon(128)">128x128</button>
+        </div>
+        <div class="icon-box">
+            <canvas id="icon256" width="256" height="256"></canvas>
+            <br>
+            <button onclick="downloadIcon(256)">256x256</button>
+        </div>
+    </div>
+
+    <button onclick="downloadAllIcons()" class="download-all">📥 Download All Icons</button>
+
+    <script>
+        function drawYouTubeStyleIcon(ctx, size) {
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+            
+            // --- BACKGROUND (subtle gradient) ---
+            const bgGradient = ctx.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+            bgGradient.addColorStop(0, '#f9f9f9');
+            bgGradient.addColorStop(1, '#eaeaea');
+            ctx.fillStyle = bgGradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // --- MAIN YOUTUBE SHAPE (exact style) ---
+            const margin = size * 0.1;
+            const rectSize = size - (margin * 2);
+            
+            // Purple background (exact YouTube shape)
+            ctx.fillStyle = '#9333ea'; // Bright purple
+            ctx.shadowColor = '#9333ea';
+            ctx.shadowBlur = size * 0.05;
+            
+            // Draw perfect rounded rectangle (YouTube style)
+            const radius = size * 0.12;
+            ctx.beginPath();
+            ctx.moveTo(margin + radius, margin);
+            ctx.lineTo(margin + rectSize - radius, margin);
+            ctx.quadraticCurveTo(margin + rectSize, margin, margin + rectSize, margin + radius);
+            ctx.lineTo(margin + rectSize, margin + rectSize - radius);
+            ctx.quadraticCurveTo(margin + rectSize, margin + rectSize, margin + rectSize - radius, margin + rectSize);
+            ctx.lineTo(margin + radius, margin + rectSize);
+            ctx.quadraticCurveTo(margin, margin + rectSize, margin, margin + rectSize - radius);
+            ctx.lineTo(margin, margin + radius);
+            ctx.quadraticCurveTo(margin, margin, margin + radius, margin);
+            ctx.closePath();
+            ctx.fill();
+            
+            // --- WHITE PLAY BUTTON (YouTube style) ---
+            ctx.shadowBlur = size * 0.03;
+            ctx.fillStyle = '#ffffff';
+            
+            // Play triangle (exact YouTube proportions)
+            const triX = margin + rectSize * 0.35;
+            const triY = margin + rectSize * 0.25;
+            const triWidth = rectSize * 0.3;
+            const triHeight = rectSize * 0.5;
+            
+            ctx.beginPath();
+            ctx.moveTo(triX, triY);
+            ctx.lineTo(triX + triWidth, triY + triHeight/2);
+            ctx.lineTo(triX, triY + triHeight);
+            ctx.closePath();
+            ctx.fill();
+            
+            // --- GRADUATION CAP (exact emoji style 🎓) ---
+            ctx.shadowBlur = size * 0.04;
+            
+            // Cap board (square part)
+            ctx.fillStyle = '#000000';
+            const boardSize = size * 0.25;
+            const boardX = size * 0.55;
+            const boardY = size * 0.3;
+            ctx.fillRect(boardX, boardY, boardSize, boardSize * 0.3);
+            
+            // Cap top (mortarboard)
+            ctx.fillStyle = '#000000';
+            const topSize = size * 0.18;
+            const topX = size * 0.58;
+            const topY = size * 0.15;
+            ctx.fillRect(topX, topY, topSize, topSize * 0.4);
+            
+            // Gold tassel
+            ctx.fillStyle = '#fbbf24';
+            ctx.beginPath();
+            ctx.arc(topX + topSize/2, topY + topSize * 0.5, size * 0.02, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Tassel string
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = size * 0.01;
+            ctx.beginPath();
+            ctx.moveTo(topX + topSize/2, topY + topSize * 0.5);
+            ctx.lineTo(boardX + boardSize/2, boardY + boardSize * 0.15);
+            ctx.stroke();
+            
+            // --- WHITE BORDER (YouTube style outline) ---
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.lineWidth = size * 0.01;
+            ctx.strokeRect(margin, margin, rectSize, rectSize);
+            
+            // Reset shadow
+            ctx.shadowBlur = 0;
+        }
+
+        // Draw all sizes
+        drawYouTubeStyleIcon(document.getElementById('icon64').getContext('2d'), 64);
+        drawYouTubeStyleIcon(document.getElementById('icon128').getContext('2d'), 128);
+        drawYouTubeStyleIcon(document.getElementById('icon256').getContext('2d'), 256);
+
+        function downloadIcon(size) {
+            const canvas = document.getElementById(`icon${size}`);
+            const link = document.createElement('a');
+            link.download = size === 64 ? 'favicon.ico' : `icon-${size}x${size}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        function downloadAllIcons() {
+            downloadIcon(64);
+            setTimeout(() => downloadIcon(128), 500);
+            setTimeout(() => downloadIcon(256), 1000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Modern StudyTube Icon Generator</title>
+    <style>
+        body {
+            background: #f5f5f5;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            text-align: center;
+            padding: 30px;
+        }
+        h1 {
+            color: #6b21a8;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #4b5563;
+            margin-bottom: 30px;
+        }
+        .preview-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+        .preview-card {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(107, 33, 168, 0.2);
+        }
+        canvas {
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin: 10px;
+        }
+        .size-label {
+            color: #6b21a8;
+            font-weight: bold;
+            margin: 10px 0 5px;
+        }
+        button {
+            background: #6b21a8;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.2s;
+            border: 1px solid #6b21a8;
+        }
+        button:hover {
+            background: #581c87;
+            transform: scale(1.05);
+        }
+        .download-all {
+            background: #1f2937;
+            padding: 15px 40px;
+            font-size: 16px;
+            margin: 30px 0;
+        }
+        .instructions {
+            background: #f3f4f6;
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+            color: #374151;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎓 StudyTube Modern Icon</h1>
+    <div class="subtitle">Purple Play Button + Black Graduation Cap • Soft Gradient Background</div>
+
+    <div class="preview-container">
+        <!-- 64x64 Preview -->
+        <div class="preview-card">
+            <div class="size-label">64x64 (Favicon)</div>
+            <canvas id="icon64" width="64" height="64"></canvas>
+            <br>
+            <button onclick="downloadIcon(64)">Download 64x64</button>
+        </div>
+
+        <!-- 128x128 Preview -->
+        <div class="preview-card">
+            <div class="size-label">128x128</div>
+            <canvas id="icon128" width="128" height="128"></canvas>
+            <br>
+            <button onclick="downloadIcon(128)">Download 128x128</button>
+        </div>
+
+        <!-- 256x256 Preview -->
+        <div class="preview-card">
+            <div class="size-label">256x256</div>
+            <canvas id="icon256" width="256" height="256"></canvas>
+            <br>
+            <button onclick="downloadIcon(256)">Download 256x256</button>
+        </div>
+
+        <!-- 512x512 Preview -->
+        <div class="preview-card">
+            <div class="size-label">512x512</div>
+            <canvas id="icon512" width="512" height="512"></canvas>
+            <br>
+            <button onclick="downloadIcon(512)">Download 512x512</button>
+        </div>
+
+        <!-- 1024x1024 Preview -->
+        <div class="preview-card">
+            <div class="size-label">1024x1024 (App Store)</div>
+            <canvas id="icon1024" width="1024" height="1024"></canvas>
+            <br>
+            <button onclick="downloadIcon(1024)">Download 1024x1024</button>
+        </div>
+    </div>
+
+    <button onclick="downloadAllIcons()" class="download-all">📥 Download All Sizes (5 icons)</button>
+
+    <div class="instructions">
+        <h3>📁 How to use:</h3>
+        <ol>
+            <li>Click download buttons to save each size</li>
+            <li>Rename 64x64 to <strong>favicon.ico</strong></li>
+            <li>Place all files in: <code>frontend/public/</code></li>
+            <li>Update index.html with the links below</li>
+        </ol>
+        
+        <h3>📝 Add to index.html:</h3>
+        <pre style="background: #1f2937; color: #fff; padding: 10px; border-radius: 5px; overflow-x: auto;">
+&lt;!-- Modern StudyTube Icon --&gt;
+&lt;link rel="icon" type="image/png" sizes="64x64" href="/favicon.ico"&gt;
+&lt;link rel="icon" type="image/png" sizes="128x128" href="/icon-128x128.png"&gt;
+&lt;link rel="icon" type="image/png" sizes="256x256" href="/icon-256x256.png"&gt;
+&lt;link rel="icon" type="image/png" sizes="512x512" href="/icon-512x512.png"&gt;
+&lt;link rel="apple-touch-icon" href="/icon-256x256.png"&gt;</pre>
+    </div>
+
+    <script>
+        function drawModernIcon(ctx, size) {
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+            
+            // --- SOFT GRADIENT BACKGROUND ---
+            // Light lavender to soft grey gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#f0e7fe');  // Light lavender
+            gradient.addColorStop(0.5, '#e9eaf0'); // Soft grey
+            gradient.addColorStop(1, '#d9dde8');   // Subtle purple-tinted white
+            ctx.fillStyle = gradient;
+            
+            // Draw rounded square background
+            const cornerRadius = size * 0.2;
+            ctx.beginPath();
+            ctx.moveTo(cornerRadius, 0);
+            ctx.lineTo(size - cornerRadius, 0);
+            ctx.quadraticCurveTo(size, 0, size, cornerRadius);
+            ctx.lineTo(size, size - cornerRadius);
+            ctx.quadraticCurveTo(size, size, size - cornerRadius, size);
+            ctx.lineTo(cornerRadius, size);
+            ctx.quadraticCurveTo(0, size, 0, size - cornerRadius);
+            ctx.lineTo(0, cornerRadius);
+            ctx.quadraticCurveTo(0, 0, cornerRadius, 0);
+            ctx.closePath();
+            ctx.fill();
+
+            // --- PURPLE YOUTUBE PLAY BUTTON ---
+            const playBtnSize = size * 0.5;
+            const playBtnX = size * 0.25;
+            const playBtnY = size * 0.25;
+            
+            // Deep purple play button background
+            ctx.fillStyle = '#6b21a8'; // Deep rich purple
+            ctx.beginPath();
+            ctx.moveTo(playBtnX + playBtnSize * 0.1, playBtnY);
+            ctx.lineTo(playBtnX + playBtnSize * 0.9, playBtnY);
+            ctx.quadraticCurveTo(playBtnX + playBtnSize, playBtnY, playBtnX + playBtnSize, playBtnY + playBtnSize * 0.1);
+            ctx.lineTo(playBtnX + playBtnSize, playBtnY + playBtnSize * 0.9);
+            ctx.quadraticCurveTo(playBtnX + playBtnSize, playBtnY + playBtnSize, playBtnX + playBtnSize * 0.9, playBtnY + playBtnSize);
+            ctx.lineTo(playBtnX + playBtnSize * 0.1, playBtnY + playBtnSize);
+            ctx.quadraticCurveTo(playBtnX, playBtnY + playBtnSize, playBtnX, playBtnY + playBtnSize * 0.9);
+            ctx.lineTo(playBtnX, playBtnY + playBtnSize * 0.1);
+            ctx.quadraticCurveTo(playBtnX, playBtnY, playBtnX + playBtnSize * 0.1, playBtnY);
+            ctx.closePath();
+            ctx.fill();
+
+            // White play triangle
+            ctx.fillStyle = '#ffffff';
+            const triangleSize = playBtnSize * 0.35;
+            ctx.beginPath();
+            ctx.moveTo(playBtnX + playBtnSize * 0.35, playBtnY + playBtnSize * 0.25);
+            ctx.lineTo(playBtnX + playBtnSize * 0.7, playBtnY + playBtnSize * 0.5);
+            ctx.lineTo(playBtnX + playBtnSize * 0.35, playBtnY + playBtnSize * 0.75);
+            ctx.closePath();
+            ctx.fill();
+
+            // --- BLACK GRADUATION CAP (overlapping) ---
+            const capX = size * 0.45;
+            const capY = size * 0.45;
+            const capSize = size * 0.4;
+
+            // Cap brim (horizontal rectangle)
+            ctx.fillStyle = '#1a1a1a'; // Almost black
+            ctx.fillRect(capX, capY + capSize * 0.3, capSize * 0.5, capSize * 0.08);
+
+            // Cap top (square with slight curve)
+            ctx.fillStyle = '#000000'; // Pure black
+            ctx.fillRect(capX + capSize * 0.1, capY, capSize * 0.3, capSize * 0.2);
+
+            // Cap button on top
+            ctx.fillStyle = '#fbbf24'; // Gold accent
+            ctx.beginPath();
+            ctx.arc(capX + capSize * 0.25, capY + capSize * 0.1, capSize * 0.04, 0, 2 * Math.PI);
+            ctx.fill();
+
+            // Tassel
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = size * 0.008;
+            ctx.beginPath();
+            ctx.moveTo(capX + capSize * 0.25, capY + capSize * 0.2);
+            ctx.lineTo(capX + capSize * 0.25, capY + capSize * 0.35);
+            ctx.stroke();
+
+            // Subtle shadow for depth
+            ctx.shadowColor = 'rgba(0,0,0,0.1)';
+            ctx.shadowBlur = size * 0.02;
+            ctx.shadowOffsetY = size * 0.01;
+        }
+
+        // Draw all icon sizes
+        drawModernIcon(document.getElementById('icon64').getContext('2d'), 64);
+        drawModernIcon(document.getElementById('icon128').getContext('2d'), 128);
+        drawModernIcon(document.getElementById('icon256').getContext('2d'), 256);
+        drawModernIcon(document.getElementById('icon512').getContext('2d'), 512);
+        drawModernIcon(document.getElementById('icon1024').getContext('2d'), 1024);
+
+        function downloadIcon(size) {
+            const canvas = document.getElementById(`icon${size}`);
+            const link = document.createElement('a');
+            
+            if (size === 64) {
+                link.download = 'favicon.ico';
+            } else {
+                link.download = `icon-${size}x${size}.png`;
+            }
+            
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        function downloadAllIcons() {
+            const sizes = [64, 128, 256, 512, 1024];
+            sizes.forEach((size, index) => {
+                setTimeout(() => downloadIcon(size), index * 500);
+            });
+        }
+    </script>
+</body>
+</html>

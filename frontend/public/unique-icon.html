@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Unique StudyTube Icon - Original Design</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            text-align: center;
+            padding: 30px;
+            color: white;
+        }
+        h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .subtitle {
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        .preview-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+        .icon-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        canvas {
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            margin: 10px;
+            display: block;
+        }
+        button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 5px;
+            transition: transform 0.2s;
+            border: 1px solid white;
+        }
+        button:hover {
+            transform: scale(1.05);
+            background: #f0f0f0;
+        }
+        .download-all {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 15px 40px;
+            font-size: 16px;
+            margin: 30px 0;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .download-all:hover {
+            background: rgba(255,255,255,0.3);
+        }
+    </style>
+</head>
+<body>
+    <h1>📚 StudyTube Original Icon</h1>
+    <div class="subtitle">Unique Design • Book + Play Button + Graduation Cap</div>
+
+    <div class="preview-container">
+        <div class="icon-card">
+            <canvas id="icon64" width="64" height="64"></canvas>
+            <br>
+            <button onclick="downloadIcon(64)">64x64</button>
+        </div>
+        <div class="icon-card">
+            <canvas id="icon128" width="128" height="128"></canvas>
+            <br>
+            <button onclick="downloadIcon(128)">128x128</button>
+        </div>
+        <div class="icon-card">
+            <canvas id="icon256" width="256" height="256"></canvas>
+            <br>
+            <button onclick="downloadIcon(256)">256x256</button>
+        </div>
+        <div class="icon-card">
+            <canvas id="icon512" width="512" height="512"></canvas>
+            <br>
+            <button onclick="downloadIcon(512)">512x512</button>
+        </div>
+    </div>
+
+    <button onclick="downloadAllIcons()" class="download-all">📥 Download All Icons</button>
+
+    <script>
+        function drawUniqueIcon(ctx, size) {
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+            
+            // --- UNIQUE BACKGROUND GRADIENT ---
+            const bgGradient = ctx.createLinearGradient(0, 0, size, size);
+            bgGradient.addColorStop(0, '#667eea');  // Soft blue
+            bgGradient.addColorStop(0.5, '#764ba2'); // Purple
+            bgGradient.addColorStop(1, '#6b46c1');   // Deep purple
+            ctx.fillStyle = bgGradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // --- OPEN BOOK BASE (education) ---
+            const bookWidth = size * 0.5;
+            const bookHeight = size * 0.35;
+            const bookX = size * 0.25;
+            const bookY = size * 0.45;
+            
+            // Left page (darker)
+            ctx.fillStyle = '#2d3748';
+            ctx.beginPath();
+            ctx.moveTo(bookX, bookY);
+            ctx.lineTo(bookX + bookWidth/2, bookY - bookHeight/3);
+            ctx.lineTo(bookX + bookWidth/2, bookY + bookHeight - bookHeight/3);
+            ctx.lineTo(bookX, bookY + bookHeight);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Right page (lighter)
+            ctx.fillStyle = '#4a5568';
+            ctx.beginPath();
+            ctx.moveTo(bookX + bookWidth, bookY);
+            ctx.lineTo(bookX + bookWidth/2, bookY - bookHeight/3);
+            ctx.lineTo(bookX + bookWidth/2, bookY + bookHeight - bookHeight/3);
+            ctx.lineTo(bookX + bookWidth, bookY + bookHeight);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Book spine
+            ctx.fillStyle = '#1a202c';
+            ctx.fillRect(bookX + bookWidth/2 - size*0.02, bookY - size*0.02, size*0.04, bookHeight + size*0.04);
+            
+            // --- PLAY BUTTON (emerging from book) ---
+            const playX = bookX + bookWidth/2 - size*0.1;
+            const playY = bookY - size*0.1;
+            
+            // Play button background circle
+            ctx.fillStyle = '#fbbf24'; // Gold
+            ctx.shadowColor = '#fbbf24';
+            ctx.shadowBlur = size * 0.05;
+            ctx.beginPath();
+            ctx.arc(playX + size*0.1, playY + size*0.1, size*0.12, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Play triangle
+            ctx.fillStyle = '#ffffff';
+            ctx.shadowBlur = size * 0.03;
+            ctx.beginPath();
+            ctx.moveTo(playX + size*0.05, playY + size*0.05);
+            ctx.lineTo(playX + size*0.18, playY + size*0.1);
+            ctx.lineTo(playX + size*0.05, playY + size*0.15);
+            ctx.closePath();
+            ctx.fill();
+            
+            // --- GRADUATION CAP (on top) ---
+            const capX = bookX + bookWidth/2 - size*0.12;
+            const capY = bookY - size*0.25;
+            
+            // Cap board
+            ctx.fillStyle = '#ef4444'; // Red accent
+            ctx.shadowBlur = size * 0.04;
+            ctx.fillRect(capX, capY, size*0.24, size*0.05);
+            
+            // Cap top
+            ctx.fillStyle = '#dc2626';
+            ctx.fillRect(capX + size*0.07, capY - size*0.08, size*0.1, size*0.08);
+            
+            // Gold tassel
+            ctx.fillStyle = '#fbbf24';
+            ctx.beginPath();
+            ctx.arc(capX + size*0.12, capY - size*0.04, size*0.02, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // --- DECORATIVE ELEMENTS ---
+            ctx.shadowBlur = 0;
+            
+            // Sparkle dots
+            ctx.fillStyle = 'rgba(255,255,255,0.3)';
+            ctx.beginPath();
+            ctx.arc(size*0.2, size*0.2, size*0.02, 0, 2*Math.PI);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(size*0.8, size*0.3, size*0.015, 0, 2*Math.PI);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(size*0.85, size*0.8, size*0.01, 0, 2*Math.PI);
+            ctx.fill();
+            
+            // Reset shadow
+            ctx.shadowBlur = 0;
+            ctx.shadowColor = 'transparent';
+        }
+
+        // Draw all sizes
+        drawUniqueIcon(document.getElementById('icon64').getContext('2d'), 64);
+        drawUniqueIcon(document.getElementById('icon128').getContext('2d'), 128);
+        drawUniqueIcon(document.getElementById('icon256').getContext('2d'), 256);
+        drawUniqueIcon(document.getElementById('icon512').getContext('2d'), 512);
+
+        function downloadIcon(size) {
+            const canvas = document.getElementById(`icon${size}`);
+            const link = document.createElement('a');
+            link.download = size === 64 ? 'favicon.ico' : `icon-${size}x${size}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        function downloadAllIcons() {
+            const sizes = [64, 128, 256, 512];
+            sizes.forEach((size, index) => {
+                setTimeout(() => downloadIcon(size), index * 500);
+            });
+        }
+    </script>
+</body>
+</html>
