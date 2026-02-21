@@ -13,19 +13,39 @@ import {
   FaStar,
   FaYoutube
 } from 'react-icons/fa';
-import PomodoroTimer from './PomodoroTimer';  // Import the timer
+import SearchHistory from './SearchHistory';
+import PomodoroTimer from './PomodoroTimer';
 
 const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showHistory, setShowHistory] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
+      // Save to search history
+      const history = JSON.parse(localStorage.getItem('studytube-search-history') || '[]');
+      const newHistory = [
+        {
+          query: searchQuery.trim(),
+          timestamp: new Date().toISOString()
+        },
+        ...history.filter(item => item.query !== searchQuery.trim())
+      ].slice(0, 10);
+      localStorage.setItem('studytube-search-history', JSON.stringify(newHistory));
+      
       navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+      setShowHistory(false);
     }
+  };
+
+  const handleSearchSelect = (query) => {
+    setSearchQuery(query);
+    navigate(`/search?q=${encodeURIComponent(query)}`);
+    setShowHistory(false);
   };
 
   const navItems = [
@@ -35,7 +55,6 @@ const Layout = () => {
     { path: '/profile', icon: FaUser, label: 'Profile' },
   ];
 
-  // Updated categories to match available content from your channels
   const categories = [
     { name: '12th Maths', icon: FaChartLine, color: 'text-green-400', query: '12th maths' },
     { name: 'Vivek Maths', icon: FaBook, color: 'text-blue-400', query: 'vivek maths' },
@@ -146,18 +165,35 @@ const Layout = () => {
               {sidebarOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
             </button>
             
-            <form onSubmit={handleSearch} className="flex-1 max-w-2xl">
+            <form onSubmit={handleSearch} className="flex-1 max-w-2xl relative">
               <div className="relative group">
                 <input
                   type="text"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setShowHistory(true);
+                  }}
+                  onFocus={() => setShowHistory(true)}
+                  onBlur={() => {
+                    setTimeout(() => setShowHistory(false), 200);
+                  }}
                   placeholder="Try: vivek maths, 12th maths, ram maths, public exam 2026..."
                   className="w-full px-5 py-3 bg-dark-800/50 border border-dark-700 rounded-xl 
                            focus:outline-none focus:ring-2 focus:ring-accent-blue/50 focus:border-accent-blue
                            transition-all duration-300 text-gray-200 placeholder-gray-500
-                           group-hover:border-dark-600"
+                           group-hover:border-dark-600 pr-24"
                 />
+                
+                {/* Search History Dropdown */}
+                {showHistory && (
+                  <SearchHistory 
+                    query={searchQuery}
+                    onSelect={handleSearchSelect}
+                    onSearch={handleSearch}
+                  />
+                )}
+                
                 <button 
                   type="submit"
                   className="absolute right-2 top-1/2 transform -translate-y-1/2 
