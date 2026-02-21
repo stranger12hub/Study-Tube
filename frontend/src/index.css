@@ -62,3 +62,46 @@
     @apply bg-dark-800 text-accent-blue border-l-4 border-accent-blue;
   }
 }
+
+/* Pomodoro Timer Animations */
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce 2s infinite;
+}
+
+/* Progress circle animation */
+@keyframes progress-fill {
+  from {
+    stroke-dashoffset: 440;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-progress {
+  animation: progress-fill 1s ease-out forwards;
+}
