@@ -106,32 +106,13 @@ const History = () => {
 
   const filteredHistory = getFilteredHistory();
 
-  if (watchHistory.length === 0) {
-    return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center">
-        <div className="text-center">
-          <div className="w-24 h-24 bg-dark-800 rounded-3xl flex items-center justify-center mx-auto mb-6">
-            <FaHistory className="text-gray-500 text-4xl" />
-          </div>
-          <h2 className="text-2xl font-bold text-gray-400 mb-3">No watch history</h2>
-          <p className="text-gray-500 max-w-md">
-            Videos you watch will appear here. Start watching to build your history!
-          </p>
-          <Link to="/search" className="btn-primary mt-6">
-            Browse Videos
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
       {/* Header */}
-      <div className="glass-effect rounded-2xl p-6">
+      <div className="glass-effect rounded-2xl p-6 mb-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold mb-2 flex items-center gap-3">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2 flex items-center gap-3">
               <FaHistory className="text-accent-purple" />
               <span className="text-gradient">Watch</span> History
             </h1>
@@ -158,98 +139,120 @@ const History = () => {
         </div>
       </div>
 
-      {/* History List */}
-      <div className="space-y-4">
-        {/* Clear all button */}
-        <div className="flex justify-end">
-          <button
-            onClick={clearAllHistory}
-            className="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-500 
-                     rounded-lg hover:bg-red-500/20 transition-all duration-300"
-          >
-            <FaTrash /> Clear All History
-          </button>
-        </div>
-
-        {/* History items */}
-        {filteredHistory.length === 0 ? (
-          <div className="text-center py-12 glass-effect rounded-2xl">
-            <p className="text-gray-400">No videos found for this filter</p>
+      {/* History Content */}
+      {watchHistory.length === 0 ? (
+        <div className="min-h-[60vh] flex flex-col items-center justify-center">
+          <div className="text-center max-w-md mx-auto">
+            <div className="w-24 h-24 bg-gradient-to-br from-accent-purple/20 to-accent-blue/20 
+                          rounded-3xl flex items-center justify-center mx-auto mb-6">
+              <FaHistory className="text-accent-purple text-5xl opacity-50" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-300 mb-3">No watch history</h2>
+            <p className="text-gray-500 mb-8">
+              Videos you watch will appear here. Start watching to build your history!
+            </p>
+            <Link to="/search" className="btn-primary px-8 py-3 text-lg">
+              Browse Videos
+            </Link>
           </div>
-        ) : (
-          filteredHistory.map((item, index) => (
-            <div
-              key={`${item.videoId}-${index}`}
-              className="group relative bg-dark-900/50 rounded-xl overflow-hidden 
-                       hover:bg-dark-900 transition-all duration-300 border border-dark-800
-                       hover:border-accent-purple/50"
+        </div>
+      ) : (
+        <>
+          {/* Clear all button */}
+          <div className="flex justify-end mb-6">
+            <button
+              onClick={clearAllHistory}
+              className="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-500 
+                       rounded-lg hover:bg-red-500/20 transition-all duration-300
+                       border border-red-500/20 hover:border-red-500/40"
             >
-              <div className="flex flex-col sm:flex-row">
-                {/* Thumbnail */}
-                <Link 
-                  to={`/watch/${item.videoId}${item.timestamp ? `?t=${item.timestamp}` : ''}`}
-                  className="sm:w-64 relative group/thumb"
-                >
-                  <img
-                    src={item.thumbnail || 'https://via.placeholder.com/320x180?text=StudyTube'}
-                    alt={item.title || 'Video thumbnail'}
-                    className="w-full h-40 sm:h-28 object-cover"
-                    onError={(e) => {
-                      e.target.src = 'https://via.placeholder.com/320x180?text=StudyTube';
-                    }}
-                  />
-                  {item.timestamp > 0 && (
-                    <div className="absolute bottom-2 right-2 bg-black/80 text-white 
-                                  text-xs px-2 py-1 rounded">
-                      {formatTimestamp(item.timestamp)}
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover/thumb:opacity-100 
-                                flex items-center justify-center transition-opacity">
-                    <FaPlayCircle className="text-white text-4xl" />
-                  </div>
-                </Link>
+              <FaTrash /> Clear All History
+            </button>
+          </div>
 
-                {/* Details */}
-                <div className="flex-1 p-4">
-                  <Link to={`/watch/${item.videoId}${item.timestamp ? `?t=${item.timestamp}` : ''}`}>
-                    <h4 className="font-semibold text-lg mb-1 hover:text-accent-purple 
-                                 transition-colors line-clamp-2">
-                      {item.title || 'Untitled Video'}
-                    </h4>
+          {/* History items grid */}
+          {filteredHistory.length === 0 ? (
+            <div className="glass-effect rounded-2xl p-12 text-center">
+              <p className="text-gray-400 text-lg">No videos found for this filter</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {filteredHistory.map((item, index) => (
+                <div
+                  key={`${item.videoId}-${index}`}
+                  className="group bg-dark-900/50 rounded-xl overflow-hidden 
+                           hover:bg-dark-900 transition-all duration-300 border border-dark-800
+                           hover:border-accent-purple/50 hover:shadow-xl hover:shadow-accent-purple/5
+                           hover:-translate-y-1"
+                >
+                  {/* Thumbnail */}
+                  <Link 
+                    to={`/watch/${item.videoId}${item.timestamp ? `?t=${item.timestamp}` : ''}`}
+                    className="block relative aspect-video overflow-hidden"
+                  >
+                    <img
+                      src={item.thumbnail || 'https://via.placeholder.com/320x180?text=StudyTube'}
+                      alt={item.title || 'Video thumbnail'}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      onError={(e) => {
+                        e.target.src = 'https://via.placeholder.com/320x180?text=StudyTube';
+                      }}
+                    />
+                    {item.timestamp > 0 && (
+                      <div className="absolute bottom-2 right-2 bg-black/80 text-white 
+                                    text-xs px-2 py-1 rounded-lg font-medium">
+                        {formatTimestamp(item.timestamp)}
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 
+                                  flex items-center justify-center transition-all duration-300
+                                  backdrop-blur-sm">
+                      <FaPlayCircle className="text-white text-5xl transform 
+                                           group-hover:scale-110 transition-transform" />
+                    </div>
                   </Link>
-                  <p className="text-sm text-gray-400 mb-2">{item.channelTitle || 'Unknown Channel'}</p>
-                  
-                  <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
-                    <span className="flex items-center gap-1">
-                      <FaClock className="text-accent-purple" />
-                      {timeAgo(item.lastWatched)}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <FaEye className="text-accent-blue" />
-                      {item.timestamp ? `Watched ${formatTimestamp(item.timestamp)}` : 'Not started'}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <FaCalendar className="text-accent-green" />
+
+                  {/* Details */}
+                  <div className="p-4">
+                    <Link to={`/watch/${item.videoId}${item.timestamp ? `?t=${item.timestamp}` : ''}`}>
+                      <h4 className="font-semibold text-base mb-2 hover:text-accent-purple 
+                                   transition-colors line-clamp-2">
+                        {item.title || 'Untitled Video'}
+                      </h4>
+                    </Link>
+                    
+                    <p className="text-sm text-gray-400 mb-3 line-clamp-1">
+                      {item.channelTitle || 'Unknown Channel'}
+                    </p>
+                    
+                    <div className="flex items-center justify-between text-xs text-gray-500">
+                      <div className="flex items-center gap-1">
+                        <FaClock className="text-accent-purple" />
+                        <span>{timeAgo(item.lastWatched)}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <FaEye className="text-accent-blue" />
+                        <span>{item.timestamp ? 'In progress' : 'Not started'}</span>
+                      </div>
+                      <button
+                        onClick={(e) => removeFromHistory(item.videoId, e)}
+                        className="text-gray-400 hover:text-red-500 transition-colors"
+                        title="Remove from history"
+                      >
+                        <FaTrash size={12} />
+                      </button>
+                    </div>
+                    
+                    <div className="mt-2 text-xs text-gray-600">
                       {formatDate(item.lastWatched)}
-                    </span>
+                    </div>
                   </div>
                 </div>
-
-                {/* Remove button */}
-                <button
-                  onClick={(e) => removeFromHistory(item.videoId, e)}
-                  className="absolute top-2 right-2 sm:relative sm:top-auto sm:right-auto
-                           p-2 text-gray-400 hover:text-red-500 transition-colors"
-                  title="Remove from history"
-                >
-                  <FaTrash />
-                </button>
-              </div>
+              ))}
             </div>
-          ))
-        )}
-      </div>
+          )}
+        </>
+      )}
     </div>
   );
 };

@@ -65,7 +65,7 @@ const SearchHistory = ({ query, onSelect, onSearch }) => {
 
   return (
     <div className="absolute top-full left-0 right-0 mt-2 glass-effect 
-                    rounded-xl shadow-2xl border border-dark-800 z-[100]
+                    rounded-xl shadow-2xl border border-dark-800 z-[9999]
                     animate-slide-down overflow-hidden">
       
       {/* Header */}
