@@ -16,20 +16,39 @@ const History = () => {
   }, []);
 
   const loadHistory = () => {
-    const saved = localStorage.getItem('studytube-history');
-    if (saved) {
+    // Try to get from watch history first (new format)
+    let history = [];
+    
+    // Check new format (from video progress service)
+    const watchHistoryData = localStorage.getItem('studytube-watch-history');
+    if (watchHistoryData) {
       try {
-        setWatchHistory(JSON.parse(saved));
+        history = JSON.parse(watchHistoryData);
       } catch (e) {
-        console.error('Error loading history:', e);
+        console.error('Error loading watch history:', e);
+      }
+    } 
+    // Fallback to old format
+    else {
+      const saved = localStorage.getItem('studytube-history');
+      if (saved) {
+        try {
+          history = JSON.parse(saved);
+        } catch (e) {
+          console.error('Error loading history:', e);
+        }
       }
     }
+    
+    setWatchHistory(history);
   };
 
   // Clear all history
   const clearAllHistory = () => {
     if (window.confirm('Clear all watch history?')) {
+      localStorage.removeItem('studytube-watch-history');
       localStorage.removeItem('studytube-history');
+      localStorage.removeItem('studytube-video-progress');
       setWatchHistory([]);
     }
   };
@@ -38,8 +57,16 @@ const History = () => {
   const removeFromHistory = (videoId, e) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    // Remove from watch history
     const newHistory = watchHistory.filter(item => item.videoId !== videoId);
-    localStorage.setItem('studytube-history', JSON.stringify(newHistory));
+    localStorage.setItem('studytube-watch-history', JSON.stringify(newHistory));
+    
+    // Also remove progress for this video
+    const progressData = JSON.parse(localStorage.getItem('studytube-video-progress') || '{}');
+    delete progressData[videoId];
+    localStorage.setItem('studytube-video-progress', JSON.stringify(progressData));
+    
     setWatchHistory(newHistory);
   };
 
@@ -56,7 +83,9 @@ const History = () => {
     const hours = Math.floor(minutes / 60);
     if (hours < 24) return `${hours}h ago`;
     const days = Math.floor(hours / 24);
-    return `${days}d ago`;
+    if (days < 7) return `${days}d ago`;
+    const weeks = Math.floor(days / 7);
+    return `${weeks}w ago`;
   };
 
   // Format date
@@ -167,7 +196,7 @@ const History = () => {
           ) : (
             filteredHistory.map((item, index) => (
               <div
-                key={item.videoId + index}
+                key={`${item.videoId}-${index}`}
                 className="group relative bg-dark-900/50 rounded-xl overflow-hidden 
                          hover:bg-dark-900 transition-all duration-300 border border-dark-800
                          hover:border-accent-purple/50"
