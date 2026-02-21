@@ -13,6 +13,7 @@ import {
   FaStar,
   FaYoutube
 } from 'react-icons/fa';
+import PomodoroTimer from './PomodoroTimer';  // Import the timer
 
 const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -184,6 +185,9 @@ const Layout = () => {
         <main className="flex-1 overflow-y-auto p-6">
           <Outlet />
         </main>
+        
+        {/* Pomodoro Timer - Floating widget */}
+        <PomodoroTimer />
       </div>
     </div>
   );
