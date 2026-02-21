@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { 
@@ -9,7 +9,9 @@ import {
   FaFlag,
   FaCheckCircle,
   FaYoutube,
-  FaExternalLinkAlt
+  FaExternalLinkAlt,
+  FaPlayCircle,
+  FaPauseCircle
 } from 'react-icons/fa';
 
 const Watch = () => {
@@ -18,6 +20,23 @@ const Watch = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showShare, setShowShare] = useState(false);
+  
+  // Video player state
+  const [player, setPlayer] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [savedTimestamp, setSavedTimestamp] = useState(0);
+  const playerRef = useRef(null);
+
+  // Get timestamp from URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const t = params.get('t');
+    if (t) {
+      setSavedTimestamp(parseInt(t));
+    }
+  }, []);
 
   useEffect(() => {
     const fetchVideoDetails = async () => {
@@ -38,6 +57,122 @@ const Watch = () => {
     }
   }, [videoId]);
 
+  // Save to watch history
+  const saveToHistory = (timestamp) => {
+    try {
+      const history = JSON.parse(localStorage.getItem('studytube-history') || '[]');
+      
+      const existingIndex = history.findIndex(item => item.videoId === videoId);
+      
+      const historyEntry = {
+        videoId,
+        title: video?.title,
+        thumbnail: video?.thumbnail,
+        channelTitle: video?.channelTitle,
+        timestamp: Math.floor(timestamp),
+        duration: Math.floor(duration),
+        lastWatched: new Date().toISOString()
+      };
+      
+      if (existingIndex !== -1) {
+        history[existingIndex] = historyEntry;
+      } else {
+        history.unshift(historyEntry);
+        if (history.length > 100) history.pop();
+      }
+      
+      localStorage.setItem('studytube-history', JSON.stringify(history));
+      console.log('✅ Saved to history:', Math.floor(timestamp));
+    } catch (err) {
+      console.error('Error saving to history:', err);
+    }
+  };
+
+  // YouTube Player API
+  useEffect(() => {
+    // Load YouTube IFrame API
+    if (!window.YT) {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    }
+
+    window.onYouTubeIframeAPIReady = () => {
+      setPlayer(new window.YT.Player('youtube-player', {
+        videoId: videoId,
+        playerVars: {
+          autoplay: 1,
+          start: savedTimestamp,
+          modestbranding: 1,
+          rel: 0
+        },
+        events: {
+          onReady: onPlayerReady,
+          onStateChange: onPlayerStateChange,
+          onError: onPlayerError
+        }
+      }));
+    };
+
+    return () => {
+      if (player && player.destroy) {
+        player.destroy();
+      }
+    };
+  }, [videoId]);
+
+  const onPlayerReady = (event) => {
+    setPlayer(event.target);
+    setDuration(event.target.getDuration());
+    
+    // If there's a saved timestamp, seek to it
+    if (savedTimestamp > 0) {
+      event.target.seekTo(savedTimestamp);
+    }
+  };
+
+  const onPlayerStateChange = (event) => {
+    // Player states: -1 (unstarted), 0 (ended), 1 (playing), 2 (paused), 3 (buffering)
+    setIsPlaying(event.data === 1);
+    
+    if (event.data === 1) { // Playing
+      // Start tracking time
+      const interval = setInterval(() => {
+        if (player && player.getCurrentTime) {
+          const time = player.getCurrentTime();
+          setCurrentTime(time);
+        }
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+    
+    if (event.data === 2) { // Paused
+      // Save current time to history
+      if (player && player.getCurrentTime) {
+        const time = player.getCurrentTime();
+        saveToHistory(time);
+      }
+    }
+    
+    if (event.data === 0) { // Ended
+      // Save as completed (timestamp 0 means fully watched)
+      saveToHistory(0);
+    }
+  };
+
+  const onPlayerError = (error) => {
+    console.error('YouTube Player Error:', error);
+  };
+
+  // Handle manual seek
+  const handleSeek = (seconds) => {
+    if (player && player.seekTo) {
+      player.seekTo(seconds);
+      setCurrentTime(seconds);
+    }
+  };
+
   const formatNumber = (num) => {
     if (!num) return '0';
     if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
@@ -52,6 +187,12 @@ const Watch = () => {
       month: 'long',
       day: 'numeric'
     });
+  };
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   const handleShare = () => {
@@ -97,18 +238,26 @@ const Watch = () => {
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
+      {/* Video Player */}
       <div className="relative pb-[56.25%] h-0 rounded-2xl overflow-hidden bg-dark-900 
                       shadow-2xl shadow-black/50 border border-dark-800">
-        <iframe
-          src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
-          title={video.title}
-          className="absolute top-0 left-0 w-full h-full"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        ></iframe>
+        <div id="youtube-player" className="absolute top-0 left-0 w-full h-full"></div>
+        
+        {/* Progress Indicator (optional) */}
+        {duration > 0 && (
+          <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs 
+                        px-2 py-1 rounded-full flex items-center gap-2">
+            <span>{formatTime(currentTime)} / {formatTime(duration)}</span>
+            {savedTimestamp > 0 && (
+              <span className="text-green-400" title="Resumed from where you left off">
+                ▶️ Resumed
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
+      {/* Video Info */}
       <div className="glass-effect rounded-2xl p-6 space-y-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold mb-4">{video.title}</h1>
@@ -160,6 +309,7 @@ const Watch = () => {
           </div>
         </div>
 
+        {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-dark-800/50 rounded-xl p-4 text-center">
             <FaEye className="text-accent-blue text-xl mx-auto mb-2" />
@@ -186,6 +336,7 @@ const Watch = () => {
           </div>
         </div>
 
+        {/* Description */}
         <div className="bg-dark-800/30 rounded-xl p-6">
           <h3 className="font-semibold mb-3 flex items-center gap-2">
             <span className="w-1 h-5 bg-accent-blue rounded-full"></span>
@@ -197,6 +348,7 @@ const Watch = () => {
         </div>
       </div>
 
+      {/* More from channel */}
       <div className="mt-8">
         <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
           <span className="text-gradient">More from</span>
