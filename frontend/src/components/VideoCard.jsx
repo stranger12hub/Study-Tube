@@ -24,8 +24,7 @@ const VideoCard = ({ video }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="bg-[#1F2023] border border-[#2E3035] rounded-2xl overflow-hidden 
-                      transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
+      <div className="card card-hover overflow-hidden">
         {/* Thumbnail */}
         <div className="relative overflow-hidden aspect-video">
           <img 
@@ -36,38 +35,38 @@ const VideoCard = ({ video }) => {
           />
           
           {/* Play overlay */}
-          <div className={`absolute inset-0 bg-black/30 flex items-center justify-center
+          <div className={`absolute inset-0 bg-primary-bg/30 flex items-center justify-center
                         transition-opacity duration-200
                         ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
-            <div className="w-10 h-10 bg-[#1F2023] rounded-full flex items-center justify-center
-                          border border-[#2E3035]">
-              <FaPlay className="text-[#EAEAEA] text-sm ml-0.5" />
+            <div className="w-10 h-10 bg-surface-card rounded-full flex items-center justify-center
+                          border border-border">
+              <FaPlay className="text-text-primary text-sm ml-0.5" />
             </div>
           </div>
         </div>
 
         {/* Content */}
         <div className="p-4 space-y-2">
-          <h3 className="font-medium text-[#EAEAEA] text-sm line-clamp-2 group-hover:text-[#EAEAEA]/90">
+          <h3 className="font-medium text-text-primary text-sm line-clamp-2 group-hover:text-text-primary/90">
             {video.title}
           </h3>
           
-          <p className="text-xs text-[#A1A1AA] line-clamp-2">
+          <p className="text-xs text-text-secondary line-clamp-2">
             {video.description || 'No description available'}
           </p>
 
           {/* Channel and stats */}
           <div className="flex items-center justify-between pt-2">
             <div className="flex items-center gap-1.5">
-              <div className="w-5 h-5 bg-[#2A2B2F] rounded-full flex items-center justify-center">
-                <FaUserGraduate className="text-[#A1A1AA] text-[10px]" />
+              <div className="w-5 h-5 bg-surface-hover rounded-full flex items-center justify-center">
+                <FaUserGraduate className="text-text-secondary text-[10px]" />
               </div>
-              <span className="text-xs text-[#A1A1AA] truncate max-w-[90px]">
+              <span className="text-xs text-text-secondary truncate max-w-[90px]">
                 {video.channelTitle}
               </span>
             </div>
             
-            <div className="flex items-center gap-1 text-xs text-[#A1A1AA]">
+            <div className="flex items-center gap-1 text-xs text-text-secondary">
               <FaClock className="text-[10px]" />
               <span>{formatDate(video.publishedAt)}</span>
             </div>
@@ -75,7 +74,7 @@ const VideoCard = ({ video }) => {
 
           {/* Verified badge */}
           <div className="flex justify-end">
-            <span className="px-2 py-0.5 bg-[#2A2B2F] text-[#A1A1AA] text-[10px] rounded-full border border-[#2E3035]">
+            <span className="badge-verified text-[10px]">
               ✓ Educational
             </span>
           </div>

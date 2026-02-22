@@ -7,22 +7,28 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Clean Black + Ash Palette
         primary: {
-          bg: '#0F0F10',
-          secondary: '#17181A',
+          bg: '#0F0F10',      // Primary Background
+          secondary: '#17181A', // Secondary Background
         },
-        card: {
-          DEFAULT: '#1F2023',
-          elevated: '#25262A',
-          hover: '#2A2B2F',
+        surface: {
+          card: '#1F2023',      // Card Background
+          elevated: '#25262A',  // Elevated Surface
+          hover: '#2A2B2F',     // Hover Surface
         },
-        border: '#2E3035',
+        border: {
+          DEFAULT: '#2E3035',   // Border Color
+        },
         text: {
-          primary: '#EAEAEA',
-          secondary: '#A1A1AA',
+          primary: '#EAEAEA',   // Primary Text
+          secondary: '#A1A1AA', // Secondary Text
         },
-        accent: '#C7C7C7',
+        accent: {
+          DEFAULT: '#C7C7C7',   // Minimal accent
+        }
       },
+      // Keep all your existing animations, keyframes, etc.
       animation: {
         'fade-in': 'fadeIn 0.5s ease-out',
         'slide-up': 'slideUp 0.3s ease-out',
@@ -43,22 +49,8 @@ export default {
         },
       },
       boxShadow: {
-        'soft': '0 4px 12px rgba(0, 0, 0, 0.1)',
-        'hover': '0 8px 20px rgba(0, 0, 0, 0.15)',
-        'card': '0 2px 8px rgba(0, 0, 0, 0.2)',
-      },
-      spacing: {
-        'section': '32px',
-        'grid': '24px',
-      },
-      maxWidth: {
-        'content': '1200px',
-      },
-      width: {
-        'sidebar': '240px',
-      },
-      borderRadius: {
-        'card': '16px',
+        'soft': '0 4px 12px rgba(0, 0, 0, 0.2)',
+        'card': '0 2px 8px rgba(0, 0, 0, 0.3)',
       },
     },
   },

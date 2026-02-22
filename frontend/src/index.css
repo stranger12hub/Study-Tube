@@ -26,115 +26,82 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-border rounded-full hover:bg-card-hover transition-colors;
+    @apply bg-border rounded-full hover:bg-surface-hover transition-colors;
   }
 }
 
 @layer components {
-  /* Layout */
-  .layout-container {
-    @apply flex h-screen bg-primary-bg;
-  }
-
-  .main-content {
-    @apply flex-1 flex flex-col overflow-hidden;
-  }
-
-  .content-wrapper {
-    @apply flex-1 overflow-y-auto p-6;
-  }
-
-  .content-center {
-    @apply max-w-content mx-auto w-full;
-  }
-
   /* Sidebar */
-  .sidebar {
-    @apply w-sidebar bg-primary-secondary border-r border-border 
-           flex flex-col h-screen fixed lg:static;
-  }
-
   .sidebar-link {
-    @apply flex items-center space-x-3 px-4 py-2.5 text-text-secondary
-           hover:bg-card-hover rounded-xl transition-all duration-250
-           hover:text-text-primary border border-transparent;
+    @apply flex items-center space-x-3 px-4 py-2.5 rounded-xl
+           text-text-secondary hover:text-text-primary
+           hover:bg-surface-hover transition-colors duration-200;
   }
 
   .sidebar-link.active {
-    @apply bg-card text-text-primary border-border;
+    @apply bg-surface-hover text-text-primary;
   }
 
   /* Cards */
   .card {
-    @apply bg-card rounded-card border border-border 
-           transition-all duration-250 hover:shadow-hover 
-           hover:-translate-y-1 hover:bg-card-hover;
+    @apply bg-surface-card border border-border rounded-2xl
+           shadow-card transition-all duration-200;
   }
 
-  .card-elevated {
-    @apply bg-card-elevated rounded-card border border-border shadow-soft;
+  .card-hover {
+    @apply hover:bg-surface-elevated hover:-translate-y-1 hover:shadow-soft;
   }
 
   /* Buttons */
   .btn-primary {
-    @apply bg-text-primary text-primary-bg px-6 py-2.5 rounded-xl
-           font-medium hover:bg-text-primary/90 transition-all duration-250
+    @apply px-6 py-2.5 bg-text-primary text-primary-bg rounded-xl
+           font-medium hover:bg-text-primary/90 transition-colors duration-200
            disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-secondary {
-    @apply bg-transparent text-text-primary px-6 py-2.5 rounded-xl
-           border border-border hover:bg-card-hover transition-all duration-250
+    @apply px-6 py-2.5 bg-transparent border border-border text-text-primary
+           rounded-xl font-medium hover:bg-surface-hover transition-colors duration-200
            disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-icon {
-    @apply p-2.5 bg-card border border-border rounded-xl 
-           text-text-secondary hover:text-text-primary 
-           hover:bg-card-hover transition-all duration-250;
+    @apply p-2.5 bg-surface-card border border-border rounded-xl
+           text-text-secondary hover:text-text-primary
+           hover:bg-surface-hover transition-colors duration-200;
   }
 
   /* Search Bar */
   .search-bar {
-    @apply w-full bg-card border border-border rounded-xl px-5 py-3
-           text-text-primary placeholder-text-secondary/50
+    @apply w-full h-11 bg-primary-secondary border border-border rounded-xl
+           px-5 text-text-primary placeholder-text-secondary/50
            focus:outline-none focus:border-text-secondary
-           transition-all duration-250;
+           transition-colors duration-200;
   }
 
   /* Badges */
   .badge {
-    @apply px-3 py-1 rounded-full text-xs font-medium;
+    @apply px-2 py-1 rounded-full text-xs font-medium border;
   }
 
   .badge-verified {
-    @apply bg-card-hover text-text-secondary border border-border;
+    @apply bg-surface-hover text-text-secondary border-border;
   }
 
   /* Hero Section */
   .hero-section {
-    @apply bg-primary-secondary rounded-card border border-border p-8;
+    @apply bg-primary-secondary border border-border rounded-2xl p-8;
   }
 
-  /* Filters */
+  /* Filter Buttons */
   .filter-button {
-    @apply px-4 py-2 bg-card border border-border rounded-xl
+    @apply px-4 py-2 bg-surface-card border border-border rounded-xl
            text-text-secondary hover:text-text-primary
-           hover:bg-card-hover transition-all duration-250;
+           hover:bg-surface-hover transition-colors duration-200;
   }
 
   .filter-button.active {
     @apply bg-text-primary text-primary-bg border-text-primary;
-  }
-
-  /* Grid */
-  .video-grid {
-    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-grid;
-  }
-
-  /* Spacing */
-  .section {
-    @apply mb-section;
   }
 
   /* Divider */
@@ -144,32 +111,20 @@
 
   /* Loading Skeleton */
   .skeleton {
-    @apply bg-card animate-pulse rounded-card;
+    @apply bg-surface-card/50 animate-pulse rounded-2xl;
   }
 
   .skeleton-line {
-    @apply h-4 bg-card-hover rounded w-full;
-  }
-
-  /* Tooltip */
-  .tooltip {
-    @apply absolute bottom-full left-1/2 transform -translate-x-1/2 -translate-y-2
-           px-2 py-1 bg-card-elevated text-text-secondary text-xs rounded
-           border border-border opacity-0 group-hover:opacity-100 
-           transition-opacity duration-200 whitespace-nowrap;
+    @apply h-4 bg-surface-hover rounded w-full;
   }
 }
 
 /* Utility Classes */
-.text-balance {
-  text-wrap: balance;
-}
-
-.hover-lift {
-  @apply transition-transform duration-250 hover:-translate-y-1;
-}
-
 .focus-ring {
   @apply focus:outline-none focus:ring-2 focus:ring-text-secondary/30 
          focus:ring-offset-2 focus:ring-offset-primary-bg;
+}
+
+.text-balance {
+  text-wrap: balance;
 }
