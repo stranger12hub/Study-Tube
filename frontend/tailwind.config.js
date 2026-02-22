@@ -8,27 +8,26 @@ export default {
     extend: {
       colors: {
         dark: {
-          50: '#faf7f2',  // Warm off-white
-          100: '#f0e9dd',  // Warm cream
-          200: '#e1d4c1',  // Warm beige
-          300: '#d2bea4',  // Warm tan
-          400: '#c3a987',  // Warm brown
-          500: '#b4946a',  // Medium warm brown
-          600: '#9a7b54',  // Rich brown
-          700: '#7f6242',  // Deep brown
-          800: '#654a31',  // Espresso
-          900: '#4a3120',  // Dark espresso
-          950: '#2f1f13',  // Almost black warm
+          50: '#f0fdf4',  // Fresh light green tint
+          100: '#dcfce7',  // Light mint
+          200: '#bbf7d0',  // Soft green
+          300: '#86efac',  // Mint green
+          400: '#4ade80',  // Fresh green
+          500: '#22c55e',  // Primary green
+          600: '#16a34a',  // Deep green
+          700: '#15803d',  // Forest green
+          800: '#166534',  // Dark green
+          900: '#14532d',  // Very dark green
+          950: '#052e16',  // Almost black green
         },
         accent: {
-          amber: '#f59e0b',     // Rich amber
-          gold: '#d4a373',      // Warm gold
-          bronze: '#b17f4a',    // Bronze
-          copper: '#b46f4c',    // Copper
-          rose: '#f43f5e',      // Deep rose
-          wine: '#831843',      // Wine red
-          rust: '#b45309',      // Rust orange
-          cream: '#fef3c7',     // Soft cream
+          green: '#22c55e',     // Fresh green
+          emerald: '#10b981',   // Emerald
+          mint: '#34d399',      // Mint
+          forest: '#166534',    // Forest green
+          lime: '#84cc16',      // Lime green
+          sage: '#a7c957',      // Sage green
+          spring: '#86efac',    // Spring green
         }
       },
       animation: {
@@ -42,7 +41,7 @@ export default {
         'glow': 'glow 2.5s ease-in-out infinite',
         'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
         'wave': 'wave 3s ease-in-out infinite',
-        'flicker': 'flicker 3s infinite',
+        'grow': 'grow 3s ease-in-out infinite',
       },
       keyframes: {
         gradient: {
@@ -85,22 +84,22 @@ export default {
         },
         'glow': {
           '0%, 100%': { 
-            'box-shadow': '0 0 5px rgba(245, 158, 11, 0.3), 0 0 20px rgba(245, 158, 11, 0.2)'
+            'box-shadow': '0 0 5px rgba(34, 197, 94, 0.3), 0 0 20px rgba(34, 197, 94, 0.2)'
           },
           '50%': { 
-            'box-shadow': '0 0 20px rgba(245, 158, 11, 0.5), 0 0 40px rgba(245, 158, 11, 0.3)'
+            'box-shadow': '0 0 20px rgba(34, 197, 94, 0.5), 0 0 40px rgba(34, 197, 94, 0.3)'
           }
         },
         'pulse-glow': {
           '0%, 100%': { 
             opacity: 1,
             transform: 'scale(1)',
-            'box-shadow': '0 0 0 0 rgba(245, 158, 11, 0.7)'
+            'box-shadow': '0 0 0 0 rgba(34, 197, 94, 0.7)'
           },
           '50%': { 
             opacity: 0.9,
             transform: 'scale(1.02)',
-            'box-shadow': '0 0 0 10px rgba(245, 158, 11, 0)'
+            'box-shadow': '0 0 0 10px rgba(34, 197, 94, 0)'
           }
         },
         'wave': {
@@ -108,9 +107,9 @@ export default {
           '25%': { transform: 'rotate(2deg)' },
           '75%': { transform: 'rotate(-2deg)' },
         },
-        'flicker': {
-          '0%, 100%': { opacity: 1 },
-          '50%': { opacity: 0.8 },
+        'grow': {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.05)' },
         }
       },
       backgroundSize: {
