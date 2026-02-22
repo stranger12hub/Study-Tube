@@ -8,26 +8,26 @@ export default {
     extend: {
       colors: {
         dark: {
-          50: '#f0fdf4',  // Fresh light green tint
-          100: '#dcfce7',  // Light mint
-          200: '#bbf7d0',  // Soft green
-          300: '#86efac',  // Mint green
-          400: '#4ade80',  // Fresh green
-          500: '#22c55e',  // Primary green
-          600: '#16a34a',  // Deep green
-          700: '#15803d',  // Forest green
-          800: '#166534',  // Dark green
-          900: '#14532d',  // Very dark green
-          950: '#052e16',  // Almost black green
+          50: '#faf5ff',  // Light lavender
+          100: '#f3e8ff',  // Soft purple tint
+          200: '#e9d5ff',  // Light purple
+          300: '#d8b4fe',  // Soft lavender
+          400: '#c084fc',  // Medium purple
+          500: '#a855f7',  // Primary purple
+          600: '#9333ea',  // Deep purple
+          700: '#7e22ce',  // Rich purple
+          800: '#6b21a8',  // Dark purple
+          900: '#581c87',  // Very dark purple
+          950: '#2e1065',  // Almost black purple
         },
         accent: {
-          green: '#22c55e',     // Fresh green
-          emerald: '#10b981',   // Emerald
-          mint: '#34d399',      // Mint
-          forest: '#166534',    // Forest green
-          lime: '#84cc16',      // Lime green
-          sage: '#a7c957',      // Sage green
-          spring: '#86efac',    // Spring green
+          purple: '#a855f7',     // Bright purple
+          violet: '#8b5cf6',     // Violet
+          lavender: '#c084fc',   // Lavender
+          orchid: '#d946ef',     // Orchid
+          plum: '#6b21a8',       // Plum
+          grape: '#7e22ce',      // Grape
+          mauve: '#a78bfa',      // Mauve
         }
       },
       animation: {
@@ -41,7 +41,7 @@ export default {
         'glow': 'glow 2.5s ease-in-out infinite',
         'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
         'wave': 'wave 3s ease-in-out infinite',
-        'grow': 'grow 3s ease-in-out infinite',
+        'sparkle': 'sparkle 3s ease-in-out infinite',
       },
       keyframes: {
         gradient: {
@@ -84,22 +84,22 @@ export default {
         },
         'glow': {
           '0%, 100%': { 
-            'box-shadow': '0 0 5px rgba(34, 197, 94, 0.3), 0 0 20px rgba(34, 197, 94, 0.2)'
+            'box-shadow': '0 0 5px rgba(168, 85, 247, 0.3), 0 0 20px rgba(168, 85, 247, 0.2)'
           },
           '50%': { 
-            'box-shadow': '0 0 20px rgba(34, 197, 94, 0.5), 0 0 40px rgba(34, 197, 94, 0.3)'
+            'box-shadow': '0 0 20px rgba(168, 85, 247, 0.5), 0 0 40px rgba(168, 85, 247, 0.3)'
           }
         },
         'pulse-glow': {
           '0%, 100%': { 
             opacity: 1,
             transform: 'scale(1)',
-            'box-shadow': '0 0 0 0 rgba(34, 197, 94, 0.7)'
+            'box-shadow': '0 0 0 0 rgba(168, 85, 247, 0.7)'
           },
           '50%': { 
             opacity: 0.9,
             transform: 'scale(1.02)',
-            'box-shadow': '0 0 0 10px rgba(34, 197, 94, 0)'
+            'box-shadow': '0 0 0 10px rgba(168, 85, 247, 0)'
           }
         },
         'wave': {
@@ -107,9 +107,9 @@ export default {
           '25%': { transform: 'rotate(2deg)' },
           '75%': { transform: 'rotate(-2deg)' },
         },
-        'grow': {
-          '0%, 100%': { transform: 'scale(1)' },
-          '50%': { transform: 'scale(1.05)' },
+        'sparkle': {
+          '0%, 100%': { opacity: 1, transform: 'scale(1)' },
+          '50%': { opacity: 0.8, transform: 'scale(1.1)' },
         }
       },
       backgroundSize: {
