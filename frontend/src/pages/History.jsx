@@ -66,8 +66,8 @@ const History = () => {
     }
   };
 
-  // Save video to history (called from Watch component)
-  export const saveToHistory = (videoData) => {
+  // Save video to history (called from Watch component) - REMOVED EXPORT KEYWORD
+  const saveToHistory = (videoData) => {
     try {
       const history = JSON.parse(localStorage.getItem('studytube-watch-history') || '[]');
       
