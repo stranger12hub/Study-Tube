@@ -6,12 +6,12 @@ const HeroSection = () => {
     <section className="hero-section">
       <div className="relative z-10 max-w-2xl">
         <h1 className="hero-title">
-          Learn with curated educational content
+          <span className="hero-title-highlight">Master</span> Mathematics & Science
         </h1>
         
         <p className="hero-subtitle">
-          Access hand-picked videos from trusted educational channels. 
-          No distractions, just learning.
+          Join thousands of students preparing for board exams with curated content 
+          from India's best educational channels. Free, forever.
         </p>
 
         <div className="flex flex-wrap gap-4">

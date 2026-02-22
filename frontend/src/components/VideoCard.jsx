@@ -26,25 +26,27 @@ const VideoCard = ({ video }) => {
     >
       <div className="rounded-2xl overflow-hidden transition-all duration-200 relative"
            style={{
-             backgroundColor: '#163832',
-             border: '1px solid #235347',
+             backgroundColor: '#1E2228',
+             border: '1px solid #171A1F',
              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.4)'
            }}
            onMouseEnter={(e) => {
-             e.currentTarget.style.backgroundColor = '#235347';
+             e.currentTarget.style.backgroundColor = '#171A1F';
              e.currentTarget.style.transform = 'translateY(-2px)';
-             e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.5)';
+             e.currentTarget.style.borderColor = '#C47A4A';
+             e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.5)';
            }}
            onMouseLeave={(e) => {
-             e.currentTarget.style.backgroundColor = '#163832';
+             e.currentTarget.style.backgroundColor = '#1E2228';
              e.currentTarget.style.transform = 'translateY(0)';
+             e.currentTarget.style.borderColor = '#171A1F';
              e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.4)';
            }}>
         
-        {/* Green glow overlay */}
+        {/* Copper glow overlay */}
         <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200"
              style={{
-               background: 'radial-gradient(circle at 30% 30%, rgba(142, 182, 155, 0.15) 0%, transparent 70%)'
+               background: 'radial-gradient(circle at 30% 30%, rgba(196, 122, 74, 0.12) 0%, transparent 70%)'
              }} />
         
         {/* Thumbnail */}
@@ -56,20 +58,20 @@ const VideoCard = ({ video }) => {
                        ${isHovered ? 'scale-105' : 'scale-100'}`}
           />
           
-          {/* Play overlay with green glow */}
+          {/* Play overlay with copper glow */}
           <div className={`absolute inset-0 flex items-center justify-center
                         transition-opacity duration-200
                         ${isHovered ? 'opacity-100' : 'opacity-0'}`}
-               style={{ backgroundColor: 'rgba(5, 31, 32, 0.4)' }}>
+               style={{ backgroundColor: 'rgba(15, 17, 21, 0.6)' }}>
             <div className="play-button-glow relative">
               <div className="w-10 h-10 rounded-full flex items-center justify-center relative z-10"
-                   style={{ backgroundColor: '#163832', border: '1px solid #235347' }}>
-                <FaPlay style={{ color: '#DAF1DE' }} className="text-sm ml-0.5" />
+                   style={{ backgroundColor: '#1E2228', border: '1px solid #C47A4A' }}>
+                <FaPlay style={{ color: '#F2F2F2' }} className="text-sm ml-0.5" />
               </div>
               {/* Glow effect behind play button */}
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-14 h-14"
                    style={{
-                     background: 'radial-gradient(circle, rgba(142, 182, 155, 0.3) 0%, rgba(142, 182, 155, 0.15) 40%, transparent 70%)',
+                     background: 'radial-gradient(circle, rgba(196, 122, 74, 0.3) 0%, rgba(196, 122, 74, 0.15) 40%, transparent 70%)',
                      borderRadius: '50%',
                      pointerEvents: 'none'
                    }} />
@@ -80,28 +82,28 @@ const VideoCard = ({ video }) => {
         {/* Content */}
         <div className="p-4 space-y-2 relative z-10">
           <h3 className="font-medium text-sm line-clamp-2"
-              style={{ color: '#DAF1DE' }}>
+              style={{ color: '#F2F2F2' }}>
             {video.title}
           </h3>
           
-          <p className="text-xs line-clamp-2" style={{ color: '#8EB69B' }}>
+          <p className="text-xs line-clamp-2" style={{ color: '#B5B5B5' }}>
             {video.description || 'No description available'}
           </p>
 
           {/* Channel and stats */}
           <div className="flex items-center justify-between pt-2"
-               style={{ borderTop: '1px solid #235347' }}>
+               style={{ borderTop: '1px solid #171A1F' }}>
             <div className="flex items-center gap-1.5">
               <div className="w-5 h-5 rounded-full flex items-center justify-center"
-                   style={{ backgroundColor: '#235347' }}>
-                <FaUserGraduate style={{ color: '#8EB69B' }} className="text-[10px]" />
+                   style={{ backgroundColor: '#171A1F' }}>
+                <FaUserGraduate style={{ color: '#C47A4A' }} className="text-[10px]" />
               </div>
-              <span className="text-xs truncate max-w-[90px]" style={{ color: '#8EB69B' }}>
+              <span className="text-xs truncate max-w-[90px]" style={{ color: '#B5B5B5' }}>
                 {video.channelTitle}
               </span>
             </div>
             
-            <div className="flex items-center gap-1 text-xs" style={{ color: '#8EB69B' }}>
+            <div className="flex items-center gap-1 text-xs" style={{ color: '#B5B5B5' }}>
               <FaClock className="text-[10px]" />
               <span>{formatDate(video.publishedAt)}</span>
             </div>
@@ -111,9 +113,9 @@ const VideoCard = ({ video }) => {
           <div className="flex justify-end">
             <span className="px-2 py-0.5 text-[10px] rounded-full"
                   style={{
-                    backgroundColor: '#235347',
-                    color: '#DAF1DE',
-                    border: '1px solid #8EB69B'
+                    backgroundColor: '#171A1F',
+                    color: '#C47A4A',
+                    border: '1px solid #C47A4A'
                   }}>
               ✓ Educational
             </span>
