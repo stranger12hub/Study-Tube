@@ -13,39 +13,18 @@ import {
   FaStar,
   FaYoutube
 } from 'react-icons/fa';
-import SearchHistory from './SearchHistory';
-import PomodoroTimer from './PomodoroTimer';
 
 const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [showHistory, setShowHistory] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // Save to search history
-      const history = JSON.parse(localStorage.getItem('studytube-search-history') || '[]');
-      const newHistory = [
-        {
-          query: searchQuery.trim(),
-          timestamp: new Date().toISOString()
-        },
-        ...history.filter(item => item.query !== searchQuery.trim())
-      ].slice(0, 10);
-      localStorage.setItem('studytube-search-history', JSON.stringify(newHistory));
-      
       navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
-      setShowHistory(false);
     }
-  };
-
-  const handleSearchSelect = (query) => {
-    setSearchQuery(query);
-    navigate(`/search?q=${encodeURIComponent(query)}`);
-    setShowHistory(false);
   };
 
   const navItems = [
@@ -55,22 +34,21 @@ const Layout = () => {
     { path: '/profile', icon: FaUser, label: 'Profile' },
   ];
 
-  // Fixed categories - only 6 items
   const categories = [
-    { name: '12th Maths', icon: FaChartLine, color: 'text-ash', query: '12th maths' },
-    { name: 'Vivek Maths', icon: FaBook, color: 'text-ash', query: 'vivek maths' },
-    { name: 'Ram Maths', icon: FaGraduationCap, color: 'text-ash', query: 'ram maths' },
-    { name: 'Exam Prep', icon: FaStar, color: 'text-ash', query: 'public exam 2026' },
-    { name: 'Centum Tips', icon: FaStar, color: 'text-ash', query: 'centum' },
-    { name: '10th Maths', icon: FaChartLine, color: 'text-ash', query: '10th maths' },
+    { name: '12th Maths', icon: FaChartLine, query: '12th maths' },
+    { name: 'Vivek Maths', icon: FaBook, query: 'vivek maths' },
+    { name: 'Ram Maths', icon: FaGraduationCap, query: 'ram maths' },
+    { name: 'Exam Prep', icon: FaStar, query: 'public exam 2026' },
+    { name: 'Centum Tips', icon: FaStar, query: 'centum' },
+    { name: '10th Maths', icon: FaChartLine, query: '10th maths' },
   ];
 
   return (
-    <div className="flex h-screen bg-black">
-      {/* Mobile sidebar backdrop */}
+    <div className="flex h-screen bg-primary-bg">
+      {/* Mobile overlay */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-20 lg:hidden"
+          className="fixed inset-0 bg-primary-bg/80 backdrop-blur-sm z-20 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -80,20 +58,20 @@ const Layout = () => {
         fixed lg:static inset-y-0 left-0 transform 
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         lg:translate-x-0 transition-transform duration-300 ease-in-out
-        w-72 bg-ash border-r border-ash-light z-30 flex flex-col
+        w-72 glass border-r border-white/5 z-30 flex flex-col
       `}>
         {/* Logo */}
-        <div className="p-6 border-b border-ash-light">
+        <div className="p-6 border-b border-white/5">
           <Link to="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-ash-light rounded-xl flex items-center justify-center">
-              <FaYoutube className="text-white text-xl" />
+            <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center shadow-glow">
+              <FaYoutube className="text-primary-bg text-xl" />
             </div>
             <div>
               <h1 className="text-2xl font-bold">
-                <span className="text-white">Study</span>
-                <span className="text-ash-light">Tube</span>
+                <span className="text-accent-light">Study</span>
+                <span className="text-accent">Tube</span>
               </h1>
-              <p className="text-xs text-ash">Curated Learning</p>
+              <p className="text-xs text-accent-light/50">Curated Learning</p>
             </div>
           </Link>
         </div>
@@ -107,22 +85,19 @@ const Layout = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-300
-                  ${isActive 
-                    ? 'bg-ash-light text-white' 
-                    : 'text-ash hover:bg-ash-light hover:text-white'}`}
+                className={`sidebar-link ${isActive ? 'active' : ''}`}
                 onClick={() => setSidebarOpen(false)}
               >
-                <Icon className="text-xl" />
+                <Icon className="text-lg" />
                 <span>{item.label}</span>
               </Link>
             );
           })}
 
-          {/* Categories Section */}
-          <div className="pt-6 mt-6 border-t border-ash-light">
-            <h3 className="px-4 text-xs font-semibold text-ash uppercase tracking-wider mb-3">
-              Recommended Searches
+          {/* Categories */}
+          <div className="pt-6 mt-6 border-t border-white/5">
+            <h3 className="px-4 text-xs font-semibold text-accent-light/50 uppercase tracking-wider mb-3">
+              Recommended
             </h3>
             {categories.map((cat) => {
               const Icon = cat.icon;
@@ -130,10 +105,10 @@ const Layout = () => {
                 <Link
                   key={cat.name}
                   to={`/search?q=${cat.query}`}
-                  className="flex items-center space-x-3 px-4 py-2 text-ash hover:text-white hover:bg-ash-light rounded-lg transition-all duration-300"
+                  className="sidebar-link"
                   onClick={() => setSidebarOpen(false)}
                 >
-                  <Icon className="text-lg" />
+                  <Icon className="text-lg text-accent/70" />
                   <span>{cat.name}</span>
                 </Link>
               );
@@ -141,15 +116,15 @@ const Layout = () => {
           </div>
         </nav>
 
-        {/* User Profile */}
-        <div className="p-4 border-t border-ash-light">
-          <div className="flex items-center space-x-3 p-2 bg-ash-light/30 rounded-lg">
-            <div className="w-10 h-10 bg-ash-light rounded-full flex items-center justify-center">
-              <FaUser className="text-white" />
+        {/* User profile */}
+        <div className="p-4 border-t border-white/5">
+          <div className="flex items-center space-x-3 p-2 bg-card rounded-xl border border-white/5">
+            <div className="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center">
+              <FaUser className="text-accent-light" />
             </div>
             <div className="flex-1">
-              <p className="text-sm font-medium text-white">Guest User</p>
-              <Link to="/login" className="text-xs text-ash hover:text-white">
+              <p className="text-sm font-medium text-accent-light">Guest User</p>
+              <Link to="/login" className="text-xs text-accent hover:text-accent-light transition-colors">
                 Sign In
               </Link>
             </div>
@@ -158,70 +133,39 @@ const Layout = () => {
       </aside>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col overflow-hidden bg-black">
+      <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="bg-ash border-b border-ash-light px-6 py-4">
+        <header className="glass border-b border-white/5 px-6 py-4">
           <div className="flex items-center space-x-4">
             <button 
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden text-ash hover:text-white transition-colors"
+              className="lg:hidden btn-icon p-2"
             >
-              {sidebarOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+              {sidebarOpen ? <FaTimes /> : <FaBars />}
             </button>
             
-          <form onSubmit={handleSearch} className="flex-1 max-w-2xl relative" style={{ zIndex: 1000 }}>
-  <div className="relative group" style={{ zIndex: 1001 }}>
-    <input
-      type="text"
-      value={searchQuery}
-      onChange={(e) => {
-        setSearchQuery(e.target.value);
-        setShowHistory(true);
-      }}
-      onFocus={() => setShowHistory(true)}
-      onBlur={() => {
-        setTimeout(() => setShowHistory(false), 200);
-      }}
-      placeholder="Try: vivek maths, 12th maths, ram maths, public exam 2026..."
-      className="w-full px-5 py-3 bg-black border border-ash-light rounded-xl 
-               focus:outline-none focus:ring-2 focus:ring-ash focus:border-ash-light
-               transition-all duration-300 text-white placeholder-ash"
-      style={{ position: 'relative', zIndex: 1002 }}
-    />
-    
-    {/* Search History Dropdown */}
-    {showHistory && (
-      <SearchHistory 
-        query={searchQuery}
-        onSelect={(query) => {
-          setSearchQuery(query);
-          setShowHistory(false);
-          navigate(`/search?q=${encodeURIComponent(query)}`);
-        }}
-        onSearch={() => {
-          if (searchQuery.trim()) {
-            setShowHistory(false);
-            navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
-          }
-        }}
-      />
-    )}
-    
-    <button 
-      type="submit"
-      className="absolute right-2 top-1/2 transform -translate-y-1/2 
-               p-2 bg-ash-light text-white rounded-lg hover:bg-ash hover:shadow-lg
-               transition-all duration-300"
-      style={{ zIndex: 1003 }}
-    >
-      <FaSearch />
-    </button>
-  </div>
-</form>
+            <form onSubmit={handleSearch} className="flex-1 max-w-2xl">
+              <div className="relative">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search educational videos..."
+                  className="search-bar pr-12"
+                />
+                <button 
+                  type="submit"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 
+                           p-2 btn-primary py-1.5 px-4 text-sm"
+                >
+                  <FaSearch />
+                </button>
+              </div>
+            </form>
 
             <Link 
               to="/login" 
-              className="hidden md:block px-6 py-2 bg-ash-light text-white rounded-lg hover:bg-ash transition-all duration-300 font-medium"
+              className="hidden md:block btn-primary"
             >
               Sign In
             </Link>
@@ -229,12 +173,9 @@ const Layout = () => {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto p-6 bg-black">
+        <main className="flex-1 overflow-y-auto p-6">
           <Outlet />
         </main>
-        
-        {/* Pomodoro Timer - Floating widget */}
-        <PomodoroTimer />
       </div>
     </div>
   );
