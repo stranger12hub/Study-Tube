@@ -55,21 +55,22 @@ const Layout = () => {
     { path: '/profile', icon: FaUser, label: 'Profile' },
   ];
 
+  // Fixed categories - only 6 items
   const categories = [
-    { name: '12th Maths', icon: FaChartLine, color: 'text-green-400', query: '12th maths' },
-    { name: 'Vivek Maths', icon: FaBook, color: 'text-blue-400', query: 'vivek maths' },
-    { name: 'Ram Maths', icon: FaGraduationCap, color: 'text-purple-400', query: 'ram maths' },
-    { name: 'Exam Prep', icon: FaStar, color: 'text-yellow-400', query: 'public exam 2026' },
-    { name: 'Centum Tips', icon: FaStar, color: 'text-pink-400', query: 'centum' },
-    { name: '10th Maths', icon: FaChartLine, color: 'text-orange-400', query: '10th maths' },
+    { name: '12th Maths', icon: FaChartLine, color: 'text-ash', query: '12th maths' },
+    { name: 'Vivek Maths', icon: FaBook, color: 'text-ash', query: 'vivek maths' },
+    { name: 'Ram Maths', icon: FaGraduationCap, color: 'text-ash', query: 'ram maths' },
+    { name: 'Exam Prep', icon: FaStar, color: 'text-ash', query: 'public exam 2026' },
+    { name: 'Centum Tips', icon: FaStar, color: 'text-ash', query: 'centum' },
+    { name: '10th Maths', icon: FaChartLine, color: 'text-ash', query: '10th maths' },
   ];
 
   return (
-    <div className="flex h-screen bg-dark-950">
+    <div className="flex h-screen bg-black">
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-20 lg:hidden"
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-20 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -79,20 +80,20 @@ const Layout = () => {
         fixed lg:static inset-y-0 left-0 transform 
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         lg:translate-x-0 transition-transform duration-300 ease-in-out
-        w-72 glass-effect z-30 flex flex-col
+        w-72 bg-ash border-r border-ash-light z-30 flex flex-col
       `}>
         {/* Logo */}
-        <div className="p-6 border-b border-dark-800">
+        <div className="p-6 border-b border-ash-light">
           <Link to="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-accent-blue to-accent-purple rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-ash-light rounded-xl flex items-center justify-center">
               <FaYoutube className="text-white text-xl" />
             </div>
             <div>
               <h1 className="text-2xl font-bold">
-                <span className="text-gradient">Study</span>
-                <span className="text-white">Tube</span>
+                <span className="text-white">Study</span>
+                <span className="text-ash-light">Tube</span>
               </h1>
-              <p className="text-xs text-gray-500">Curated Learning</p>
+              <p className="text-xs text-ash">Curated Learning</p>
             </div>
           </Link>
         </div>
@@ -106,18 +107,21 @@ const Layout = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`sidebar-link ${isActive ? 'active' : ''}`}
+                className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-300
+                  ${isActive 
+                    ? 'bg-ash-light text-white' 
+                    : 'text-ash hover:bg-ash-light hover:text-white'}`}
                 onClick={() => setSidebarOpen(false)}
               >
-                <Icon className={`text-xl ${isActive ? 'text-accent-blue' : ''}`} />
+                <Icon className="text-xl" />
                 <span>{item.label}</span>
               </Link>
             );
           })}
 
           {/* Categories Section */}
-          <div className="pt-6 mt-6 border-t border-dark-800">
-            <h3 className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+          <div className="pt-6 mt-6 border-t border-ash-light">
+            <h3 className="px-4 text-xs font-semibold text-ash uppercase tracking-wider mb-3">
               Recommended Searches
             </h3>
             {categories.map((cat) => {
@@ -126,10 +130,10 @@ const Layout = () => {
                 <Link
                   key={cat.name}
                   to={`/search?q=${cat.query}`}
-                  className="flex items-center space-x-3 px-4 py-2 text-gray-400 hover:text-white hover:bg-dark-800 rounded-lg transition-all duration-300"
+                  className="flex items-center space-x-3 px-4 py-2 text-ash hover:text-white hover:bg-ash-light rounded-lg transition-all duration-300"
                   onClick={() => setSidebarOpen(false)}
                 >
-                  <Icon className={`text-lg ${cat.color}`} />
+                  <Icon className="text-lg" />
                   <span>{cat.name}</span>
                 </Link>
               );
@@ -138,14 +142,14 @@ const Layout = () => {
         </nav>
 
         {/* User Profile */}
-        <div className="p-4 border-t border-dark-800">
-          <div className="flex items-center space-x-3 p-2 bg-dark-800/50 rounded-lg">
-            <div className="w-10 h-10 bg-gradient-to-br from-accent-purple to-accent-blue rounded-full flex items-center justify-center">
+        <div className="p-4 border-t border-ash-light">
+          <div className="flex items-center space-x-3 p-2 bg-ash-light/30 rounded-lg">
+            <div className="w-10 h-10 bg-ash-light rounded-full flex items-center justify-center">
               <FaUser className="text-white" />
             </div>
             <div className="flex-1">
-              <p className="text-sm font-medium">Guest User</p>
-              <Link to="/login" className="text-xs text-accent-blue hover:underline">
+              <p className="text-sm font-medium text-white">Guest User</p>
+              <Link to="/login" className="text-xs text-ash hover:text-white">
                 Sign In
               </Link>
             </div>
@@ -154,13 +158,13 @@ const Layout = () => {
       </aside>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden bg-black">
         {/* Header */}
-        <header className="glass-effect border-b border-dark-800 px-6 py-4">
+        <header className="bg-ash border-b border-ash-light px-6 py-4">
           <div className="flex items-center space-x-4">
             <button 
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden text-gray-400 hover:text-white transition-colors"
+              className="lg:hidden text-ash hover:text-white transition-colors"
             >
               {sidebarOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
             </button>
@@ -179,10 +183,9 @@ const Layout = () => {
         setTimeout(() => setShowHistory(false), 200);
       }}
       placeholder="Try: vivek maths, 12th maths, ram maths, public exam 2026..."
-      className="w-full px-5 py-3 bg-dark-800/50 border border-dark-700 rounded-xl 
-               focus:outline-none focus:ring-2 focus:ring-accent-blue/50 focus:border-accent-blue
-               transition-all duration-300 text-gray-200 placeholder-gray-500
-               group-hover:border-dark-600 pr-24"
+      className="w-full px-5 py-3 bg-black border border-ash-light rounded-xl 
+               focus:outline-none focus:ring-2 focus:ring-ash focus:border-ash-light
+               transition-all duration-300 text-white placeholder-ash"
       style={{ position: 'relative', zIndex: 1002 }}
     />
     
@@ -207,8 +210,7 @@ const Layout = () => {
     <button 
       type="submit"
       className="absolute right-2 top-1/2 transform -translate-y-1/2 
-               p-2 bg-gradient-to-r from-accent-blue to-accent-purple 
-               rounded-lg text-white hover:shadow-lg hover:shadow-accent-blue/30
+               p-2 bg-ash-light text-white rounded-lg hover:bg-ash hover:shadow-lg
                transition-all duration-300"
       style={{ zIndex: 1003 }}
     >
@@ -219,9 +221,7 @@ const Layout = () => {
 
             <Link 
               to="/login" 
-              className="hidden md:block px-6 py-2 bg-gradient-to-r from-accent-blue to-accent-purple 
-                       text-white rounded-lg hover:shadow-lg hover:shadow-accent-blue/30 
-                       transition-all duration-300 font-medium"
+              className="hidden md:block px-6 py-2 bg-ash-light text-white rounded-lg hover:bg-ash transition-all duration-300 font-medium"
             >
               Sign In
             </Link>
@@ -229,7 +229,7 @@ const Layout = () => {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-6 bg-black">
           <Outlet />
         </main>
         
