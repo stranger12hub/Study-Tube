@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
-import Home from './pages/HomeEnhanced';
+import Home from './pages/HomeWarm';
 import Search from './pages/SearchEnhanced';
 import Watch from './pages/Watch';
 import History from './pages/History';
