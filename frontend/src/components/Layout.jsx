@@ -44,7 +44,7 @@ const Layout = () => {
   ];
 
   return (
-    <div className="flex h-screen bg-primary-bg">
+    <div className="layout-container">
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div 
@@ -58,20 +58,20 @@ const Layout = () => {
         fixed lg:static inset-y-0 left-0 transform 
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         lg:translate-x-0 transition-transform duration-300 ease-in-out
-        w-72 glass border-r border-white/5 z-30 flex flex-col
+        sidebar z-30
       `}>
         {/* Logo */}
-        <div className="p-6 border-b border-white/5">
+        <div className="p-6 border-b border-border">
           <Link to="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center shadow-glow">
-              <FaYoutube className="text-primary-bg text-xl" />
+            <div className="w-10 h-10 bg-card rounded-xl flex items-center justify-center border border-border">
+              <FaYoutube className="text-text-primary text-xl" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold">
-                <span className="text-accent-light">Study</span>
-                <span className="text-accent">Tube</span>
+              <h1 className="text-2xl font-bold tracking-tight">
+                <span className="text-text-primary">Study</span>
+                <span className="text-text-secondary">Tube</span>
               </h1>
-              <p className="text-xs text-accent-light/50">Curated Learning</p>
+              <p className="text-xs text-text-secondary">Curated Learning</p>
             </div>
           </Link>
         </div>
@@ -95,8 +95,8 @@ const Layout = () => {
           })}
 
           {/* Categories */}
-          <div className="pt-6 mt-6 border-t border-white/5">
-            <h3 className="px-4 text-xs font-semibold text-accent-light/50 uppercase tracking-wider mb-3">
+          <div className="pt-6 mt-6 border-t border-border">
+            <h3 className="px-4 text-xs font-medium text-text-secondary uppercase tracking-wider mb-3">
               Recommended
             </h3>
             {categories.map((cat) => {
@@ -108,7 +108,7 @@ const Layout = () => {
                   className="sidebar-link"
                   onClick={() => setSidebarOpen(false)}
                 >
-                  <Icon className="text-lg text-accent/70" />
+                  <Icon className="text-lg text-text-secondary" />
                   <span>{cat.name}</span>
                 </Link>
               );
@@ -117,14 +117,14 @@ const Layout = () => {
         </nav>
 
         {/* User profile */}
-        <div className="p-4 border-t border-white/5">
-          <div className="flex items-center space-x-3 p-2 bg-card rounded-xl border border-white/5">
-            <div className="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center">
-              <FaUser className="text-accent-light" />
+        <div className="p-4 border-t border-border">
+          <div className="flex items-center space-x-3 p-2 bg-card rounded-xl border border-border">
+            <div className="w-10 h-10 bg-card-hover rounded-full flex items-center justify-center">
+              <FaUser className="text-text-secondary" />
             </div>
             <div className="flex-1">
-              <p className="text-sm font-medium text-accent-light">Guest User</p>
-              <Link to="/login" className="text-xs text-accent hover:text-accent-light transition-colors">
+              <p className="text-sm font-medium text-text-primary">Guest User</p>
+              <Link to="/login" className="text-xs text-text-secondary hover:text-text-primary transition-colors">
                 Sign In
               </Link>
             </div>
@@ -133,13 +133,13 @@ const Layout = () => {
       </aside>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="main-content">
         {/* Header */}
-        <header className="glass border-b border-white/5 px-6 py-4">
+        <header className="bg-primary-secondary border-b border-border px-6 py-4">
           <div className="flex items-center space-x-4">
             <button 
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden btn-icon p-2"
+              className="lg:hidden btn-icon"
             >
               {sidebarOpen ? <FaTimes /> : <FaBars />}
             </button>
@@ -156,16 +156,16 @@ const Layout = () => {
                 <button 
                   type="submit"
                   className="absolute right-2 top-1/2 transform -translate-y-1/2 
-                           p-2 btn-primary py-1.5 px-4 text-sm"
+                           btn-primary py-1.5 px-4 text-sm"
                 >
-                  <FaSearch />
+                  <FaSearch className="text-primary-bg" />
                 </button>
               </div>
             </form>
 
             <Link 
               to="/login" 
-              className="hidden md:block btn-primary"
+              className="hidden md:block btn-secondary text-sm"
             >
               Sign In
             </Link>
@@ -173,8 +173,10 @@ const Layout = () => {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto p-6">
-          <Outlet />
+        <main className="content-wrapper">
+          <div className="content-center animate-fade-in">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

@@ -13,7 +13,7 @@ const SkeletonCard = () => {
         <div className="h-3 bg-card-hover/30 rounded w-2/3 shimmer" />
         
         {/* Channel and stats */}
-        <div className="flex items-center justify-between pt-2">
+        <div className="flex items-center justify-between pt-2 border-t border-border">
           <div className="flex items-center space-x-2">
             <div className="w-6 h-6 bg-card-hover/30 rounded-full shimmer" />
             <div className="h-3 bg-card-hover/30 rounded w-16 shimmer" />

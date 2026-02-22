@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaPlay, FaClock, FaEye } from 'react-icons/fa';
+import { FaPlay, FaClock, FaUserGraduate } from 'react-icons/fa';
 
 const VideoCard = ({ video }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -42,55 +42,46 @@ const VideoCard = ({ video }) => {
           <div className={`absolute inset-0 flex items-center justify-center
                         transition-all duration-300 transform
                         ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}>
-            <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center
-                          shadow-glow animate-glow">
-              <FaPlay className="text-primary-bg text-lg" />
+            <div className="w-12 h-12 bg-card-elevated rounded-full flex items-center justify-center
+                          border border-border shadow-soft">
+              <FaPlay className="text-text-primary text-lg ml-0.5" />
             </div>
           </div>
-
-          {/* Duration badge */}
-          {video.duration && (
-            <span className="absolute bottom-2 right-2 px-2 py-1 bg-primary-bg/80 
-                           text-accent-light text-xs rounded-lg backdrop-blur-sm
-                           border border-accent/20">
-              {video.duration}
-            </span>
-          )}
         </div>
 
         {/* Content */}
-        <div className="p-4 space-y-2">
-          <h3 className="font-semibold text-base line-clamp-2 group-hover:text-accent-light 
+        <div className="p-4 space-y-3">
+          <h3 className="font-medium text-base line-clamp-2 group-hover:text-text-primary 
                        transition-colors duration-200">
             {video.title}
           </h3>
           
-          <p className="text-sm text-accent-light/60 line-clamp-2">
+          <p className="text-sm text-text-secondary line-clamp-2">
             {video.description || 'No description available'}
           </p>
 
           {/* Channel and stats */}
-          <div className="flex items-center justify-between pt-2">
+          <div className="flex items-center justify-between pt-2 border-t border-border">
             <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 bg-accent/20 rounded-full flex items-center justify-center">
-                <span className="text-accent-light text-xs font-medium">
-                  {video.channelTitle?.charAt(0).toUpperCase()}
-                </span>
+              <div className="w-6 h-6 bg-card-hover rounded-full flex items-center justify-center">
+                <FaUserGraduate className="text-text-secondary text-xs" />
               </div>
-              <span className="text-xs text-accent-light/70 truncate max-w-[100px]">
+              <span className="text-xs text-text-secondary truncate max-w-[100px]">
                 {video.channelTitle}
               </span>
             </div>
             
-            <div className="flex items-center space-x-2 text-xs text-accent-light/50">
-              <FaClock className="text-accent/70" />
+            <div className="flex items-center space-x-1 text-xs text-text-secondary">
+              <FaClock className="text-xs" />
               <span>{formatDate(video.publishedAt)}</span>
             </div>
           </div>
 
           {/* Verified badge */}
           <div className="flex justify-end">
-            <span className="badge text-xs">✓ Educational Channel</span>
+            <span className="badge-verified text-xs px-2 py-0.5">
+              ✓ Educational Channel
+            </span>
           </div>
         </div>
       </div>
