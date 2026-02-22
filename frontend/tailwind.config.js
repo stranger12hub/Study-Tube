@@ -8,38 +8,40 @@ export default {
     extend: {
       colors: {
         dark: {
-          50: '#f5f3f0',  // Warm off-white
-          100: '#e8e2d9',  // Warm light
-          200: '#d1c7b8',  // Warm medium
-          300: '#b9ab97',  // Warm tan
-          400: '#a28f76',  // Warm brown
-          500: '#8b7355',  // Rich brown
-          600: '#6f5c44',  // Dark brown
-          700: '#534433',  // Deep brown
-          800: '#382d22',  // Espresso
-          900: '#1d1711',  // Dark espresso
-          950: '#0f0c09',  // Almost black warm
+          50: '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#475569',
+          700: '#334155',
+          800: '#1e293b',
+          900: '#0f172a',
+          950: '#020617',
         },
-        elegant: {
-          gold: '#c6a15b',     // Rich gold
-          bronze: '#b17f4a',   // Warm bronze
-          copper: '#b46f4c',   // Copper accent
-          plum: '#5d3a4f',     // Deep plum
-          wine: '#6b3e4f',     // Wine red
-          forest: '#2d4f3e',   // Deep forest green
-          charcoal: '#2a2a2a', // Rich charcoal
-          cream: '#f5e6d3',    // Cream accent
+        accent: {
+          teal: '#2dd4bf',
+          cyan: '#22d3ee',
+          indigo: '#818cf8',
+          violet: '#a78bfa',
+          fuchsia: '#f0abfc',
+          rose: '#fb7185',
+          amber: '#fbbf24',
         }
       },
       animation: {
-        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'gradient': 'gradient 6s ease infinite',
+        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'gradient': 'gradient 8s ease infinite',
         'float': 'float 6s ease-in-out infinite',
-        'slide-up': 'slide-up 0.3s ease-out',
-        'slide-down': 'slide-down 0.2s ease-out',
-        'bounce-slow': 'bounce 2s infinite',
-        'shimmer': 'shimmer 2s infinite',
-        'glow': 'glow 2s ease-in-out infinite',
+        'slide-up': 'slide-up 0.4s ease-out',
+        'slide-down': 'slide-down 0.3s ease-out',
+        'bounce-slow': 'bounce 2.5s infinite',
+        'shimmer': 'shimmer 2.5s infinite',
+        'glow': 'glow 2.5s ease-in-out infinite',
+        'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
+        'wave': 'wave 3s ease-in-out infinite',
+        'spin-slow': 'spin 4s linear infinite',
       },
       keyframes: {
         gradient: {
@@ -54,7 +56,7 @@ export default {
         },
         float: {
           '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-10px)' },
+          '50%': { transform: 'translateY(-8px)' },
         },
         'slide-up': {
           'from': {
@@ -82,11 +84,28 @@ export default {
         },
         'glow': {
           '0%, 100%': { 
-            'box-shadow': '0 0 5px rgba(198, 161, 91, 0.3), 0 0 20px rgba(198, 161, 91, 0.2)'
+            'box-shadow': '0 0 5px rgba(45, 212, 191, 0.3), 0 0 20px rgba(45, 212, 191, 0.2)'
           },
           '50%': { 
-            'box-shadow': '0 0 20px rgba(198, 161, 91, 0.5), 0 0 40px rgba(198, 161, 91, 0.3)'
+            'box-shadow': '0 0 20px rgba(45, 212, 191, 0.5), 0 0 40px rgba(45, 212, 191, 0.3)'
           }
+        },
+        'pulse-glow': {
+          '0%, 100%': { 
+            opacity: 1,
+            transform: 'scale(1)',
+            'box-shadow': '0 0 0 0 rgba(45, 212, 191, 0.7)'
+          },
+          '50%': { 
+            opacity: 0.9,
+            transform: 'scale(1.02)',
+            'box-shadow': '0 0 0 10px rgba(45, 212, 191, 0)'
+          }
+        },
+        'wave': {
+          '0%, 100%': { transform: 'rotate(0deg)' },
+          '25%': { transform: 'rotate(2deg)' },
+          '75%': { transform: 'rotate(-2deg)' },
         }
       },
       backgroundSize: {
