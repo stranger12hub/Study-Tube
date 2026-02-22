@@ -44,34 +44,35 @@ const Layout = () => {
   ];
 
   return (
-    // ROOT LAYOUT - Full height with flex
-    <div className="flex min-h-screen bg-[#0F0F10] text-[#EAEAEA] font-sans antialiased">
+    <div className="flex min-h-screen" style={{ backgroundColor: '#051F20' }}>
       
-      {/* MOBILE OVERLAY */}
+      {/* Mobile overlay */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black/50 z-20 lg:hidden"
+          className="fixed inset-0 z-20 lg:hidden"
+          style={{ backgroundColor: '#051F20', opacity: 0.8 }}
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
-      {/* SIDEBAR - Fixed width 240px */}
+      {/* Sidebar */}
       <aside className={`
         fixed lg:static inset-y-0 left-0 transform 
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         lg:translate-x-0 transition-transform duration-300 ease-in-out
-        w-[240px] bg-[#17181A] border-r border-[#2E3035] z-30 flex flex-col
-        overflow-y-auto
-      `}>
+        w-[240px] z-30 flex flex-col overflow-y-auto
+      `} style={{ backgroundColor: '#0B2B26', borderRight: '1px solid #163832' }}>
+        
         {/* Logo */}
-        <div className="p-5 border-b border-[#2E3035]">
+        <div className="p-5" style={{ borderBottom: '1px solid #163832' }}>
           <Link to="/" className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-[#1F2023] rounded-xl flex items-center justify-center border border-[#2E3035]">
-              <FaYoutube className="text-[#EAEAEA] text-lg" />
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center" 
+                 style={{ backgroundColor: '#163832', border: '1px solid #235347' }}>
+              <FaYoutube style={{ color: '#DAF1DE' }} className="text-lg" />
             </div>
             <span className="text-lg font-semibold">
-              <span className="text-[#EAEAEA]">Study</span>
-              <span className="text-[#A1A1AA]">Tube</span>
+              <span style={{ color: '#DAF1DE' }}>Study</span>
+              <span style={{ color: '#8EB69B' }}>Tube</span>
             </span>
           </Link>
         </div>
@@ -85,11 +86,23 @@ const Layout = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all
-                  ${isActive 
-                    ? 'bg-[#2A2B2F] text-[#EAEAEA]' 
-                    : 'text-[#A1A1AA] hover:bg-[#2A2B2F] hover:text-[#EAEAEA]'
-                  }`}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all"
+                style={{
+                  backgroundColor: isActive ? '#235347' : 'transparent',
+                  color: isActive ? '#DAF1DE' : '#8EB69B'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.backgroundColor = '#235347';
+                    e.currentTarget.style.color = '#DAF1DE';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.color = '#8EB69B';
+                  }
+                }}
                 onClick={() => setSidebarOpen(false)}
               >
                 <Icon className="text-lg" />
@@ -98,9 +111,10 @@ const Layout = () => {
             );
           })}
 
-          {/* Categories Section */}
-          <div className="pt-5 mt-5 border-t border-[#2E3035]">
-            <h3 className="px-3 text-xs font-medium text-[#A1A1AA] uppercase tracking-wider mb-2">
+          {/* Categories */}
+          <div className="pt-5 mt-5" style={{ borderTop: '1px solid #163832' }}>
+            <h3 className="px-3 text-xs font-medium uppercase tracking-wider mb-2"
+                style={{ color: '#8EB69B' }}>
               Recommended
             </h3>
             {categories.map((cat) => {
@@ -109,7 +123,16 @@ const Layout = () => {
                 <Link
                   key={cat.name}
                   to={`/search?q=${cat.query}`}
-                  className="flex items-center gap-3 px-3 py-2 text-[#A1A1AA] hover:bg-[#2A2B2F] hover:text-[#EAEAEA] rounded-xl transition-all text-sm"
+                  className="flex items-center gap-3 px-3 py-2 rounded-xl transition-all text-sm"
+                  style={{ color: '#8EB69B' }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#235347';
+                    e.currentTarget.style.color = '#DAF1DE';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.color = '#8EB69B';
+                  }}
                   onClick={() => setSidebarOpen(false)}
                 >
                   <Icon className="text-base" />
@@ -121,14 +144,19 @@ const Layout = () => {
         </nav>
 
         {/* User Profile */}
-        <div className="p-3 border-t border-[#2E3035]">
-          <div className="flex items-center gap-3 p-2 bg-[#1F2023] rounded-xl border border-[#2E3035]">
-            <div className="w-9 h-9 bg-[#2A2B2F] rounded-full flex items-center justify-center">
-              <FaUser className="text-[#A1A1AA] text-sm" />
+        <div className="p-3" style={{ borderTop: '1px solid #163832' }}>
+          <div className="flex items-center gap-3 p-2 rounded-xl"
+               style={{ backgroundColor: '#163832', border: '1px solid #235347' }}>
+            <div className="w-9 h-9 rounded-full flex items-center justify-center"
+                 style={{ backgroundColor: '#235347' }}>
+              <FaUser style={{ color: '#8EB69B' }} className="text-sm" />
             </div>
             <div className="flex-1">
-              <p className="text-sm font-medium text-[#EAEAEA]">Guest</p>
-              <Link to="/login" className="text-xs text-[#A1A1AA] hover:text-[#EAEAEA] transition-colors">
+              <p className="text-sm font-medium" style={{ color: '#DAF1DE' }}>Guest</p>
+              <Link to="/login" className="text-xs transition-colors"
+                    style={{ color: '#8EB69B' }}
+                    onMouseEnter={(e) => e.currentTarget.style.color = '#DAF1DE'}
+                    onMouseLeave={(e) => e.currentTarget.style.color = '#8EB69B'}>
                 Sign In
               </Link>
             </div>
@@ -136,16 +164,25 @@ const Layout = () => {
         </div>
       </aside>
 
-      {/* MAIN CONTENT AREA - flex-1 */}
+      {/* Main content */}
       <main className="flex-1 flex flex-col min-h-screen overflow-hidden">
         
-        {/* HEADER - Inside main, before centered wrapper */}
-        <header className="bg-[#17181A] border-b border-[#2E3035] px-8 py-3">
+        {/* Header */}
+        <header className="px-8 py-3" style={{ backgroundColor: '#0B2B26', borderBottom: '1px solid #163832' }}>
           <div className="max-w-[1200px] mx-auto flex items-center gap-4">
             {/* Mobile menu button */}
             <button 
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden w-10 h-10 bg-[#1F2023] border border-[#2E3035] rounded-xl flex items-center justify-center text-[#A1A1AA] hover:text-[#EAEAEA] transition-colors"
+              className="lg:hidden w-10 h-10 rounded-xl flex items-center justify-center transition-colors"
+              style={{ backgroundColor: '#163832', border: '1px solid #235347', color: '#8EB69B' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#235347';
+                e.currentTarget.style.color = '#DAF1DE';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#163832';
+                e.currentTarget.style.color = '#8EB69B';
+              }}
             >
               {sidebarOpen ? <FaTimes size={18} /> : <FaBars size={18} />}
             </button>
@@ -158,15 +195,31 @@ const Layout = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search educational videos..."
-                  className="w-full h-11 bg-[#17181A] border border-[#2E3035] rounded-xl px-5 pr-24
-                           text-[#EAEAEA] text-sm placeholder-[#A1A1AA]/50
-                           focus:outline-none focus:border-[#A1A1AA] transition-colors"
+                  className="w-full h-11 rounded-xl px-5 pr-24 text-sm transition-colors"
+                  style={{
+                    backgroundColor: '#163832',
+                    border: '1px solid #235347',
+                    color: '#DAF1DE'
+                  }}
+                  onFocus={(e) => e.currentTarget.style.borderColor = '#8EB69B'}
+                  onBlur={(e) => e.currentTarget.style.borderColor = '#235347'}
                 />
                 <button 
                   type="submit"
                   className="absolute right-1.5 top-1/2 transform -translate-y-1/2 
-                           px-4 py-1.5 bg-[#EAEAEA] text-[#0F0F10] rounded-lg text-sm font-medium
-                           hover:bg-[#EAEAEA]/90 transition-colors"
+                           px-4 py-1.5 rounded-lg text-sm font-medium transition-colors"
+                  style={{
+                    backgroundColor: '#8EB69B',
+                    color: '#051F20'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#235347';
+                    e.currentTarget.style.color = '#DAF1DE';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#8EB69B';
+                    e.currentTarget.style.color = '#051F20';
+                  }}
                 >
                   Search
                 </button>
@@ -176,18 +229,31 @@ const Layout = () => {
             {/* Desktop sign in */}
             <Link 
               to="/login" 
-              className="hidden md:block px-4 py-2 bg-transparent border border-[#2E3035] 
-                       text-[#EAEAEA] text-sm rounded-xl hover:bg-[#2A2B2F] transition-colors"
+              className="hidden md:block px-4 py-2 rounded-xl text-sm transition-colors"
+              style={{
+                backgroundColor: 'transparent',
+                border: '1px solid #8EB69B',
+                color: '#8EB69B'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#163832';
+                e.currentTarget.style.color = '#DAF1DE';
+                e.currentTarget.style.borderColor = '#DAF1DE';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = '#8EB69B';
+                e.currentTarget.style.borderColor = '#8EB69B';
+              }}
             >
               Sign In
             </Link>
           </div>
         </header>
 
-        {/* CENTERED CONTENT WRAPPER - This is the critical part */}
+        {/* Page content */}
         <div className="flex-1 overflow-y-auto">
           <div className="max-w-[1200px] mx-auto px-8 py-8 w-full">
-            {/* Page content goes here */}
             <Outlet />
           </div>
         </div>

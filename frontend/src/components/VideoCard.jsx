@@ -24,7 +24,23 @@ const VideoCard = ({ video }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="card card-hover overflow-hidden">
+      <div className="rounded-2xl overflow-hidden transition-all duration-200"
+           style={{
+             backgroundColor: '#163832',
+             border: '1px solid #235347',
+             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.4)'
+           }}
+           onMouseEnter={(e) => {
+             e.currentTarget.style.backgroundColor = '#235347';
+             e.currentTarget.style.transform = 'translateY(-2px)';
+             e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.5)';
+           }}
+           onMouseLeave={(e) => {
+             e.currentTarget.style.backgroundColor = '#163832';
+             e.currentTarget.style.transform = 'translateY(0)';
+             e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.4)';
+           }}>
+        
         {/* Thumbnail */}
         <div className="relative overflow-hidden aspect-video">
           <img 
@@ -35,38 +51,42 @@ const VideoCard = ({ video }) => {
           />
           
           {/* Play overlay */}
-          <div className={`absolute inset-0 bg-primary-bg/30 flex items-center justify-center
+          <div className={`absolute inset-0 flex items-center justify-center
                         transition-opacity duration-200
-                        ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
-            <div className="w-10 h-10 bg-surface-card rounded-full flex items-center justify-center
-                          border border-border">
-              <FaPlay className="text-text-primary text-sm ml-0.5" />
+                        ${isHovered ? 'opacity-100' : 'opacity-0'}`}
+               style={{ backgroundColor: 'rgba(5, 31, 32, 0.3)' }}>
+            <div className="w-10 h-10 rounded-full flex items-center justify-center"
+                 style={{ backgroundColor: '#163832', border: '1px solid #235347' }}>
+              <FaPlay style={{ color: '#DAF1DE' }} className="text-sm ml-0.5" />
             </div>
           </div>
         </div>
 
         {/* Content */}
         <div className="p-4 space-y-2">
-          <h3 className="font-medium text-text-primary text-sm line-clamp-2 group-hover:text-text-primary/90">
+          <h3 className="font-medium text-sm line-clamp-2"
+              style={{ color: '#DAF1DE' }}>
             {video.title}
           </h3>
           
-          <p className="text-xs text-text-secondary line-clamp-2">
+          <p className="text-xs line-clamp-2" style={{ color: '#8EB69B' }}>
             {video.description || 'No description available'}
           </p>
 
           {/* Channel and stats */}
-          <div className="flex items-center justify-between pt-2">
+          <div className="flex items-center justify-between pt-2"
+               style={{ borderTop: '1px solid #235347' }}>
             <div className="flex items-center gap-1.5">
-              <div className="w-5 h-5 bg-surface-hover rounded-full flex items-center justify-center">
-                <FaUserGraduate className="text-text-secondary text-[10px]" />
+              <div className="w-5 h-5 rounded-full flex items-center justify-center"
+                   style={{ backgroundColor: '#235347' }}>
+                <FaUserGraduate style={{ color: '#8EB69B' }} className="text-[10px]" />
               </div>
-              <span className="text-xs text-text-secondary truncate max-w-[90px]">
+              <span className="text-xs truncate max-w-[90px]" style={{ color: '#8EB69B' }}>
                 {video.channelTitle}
               </span>
             </div>
             
-            <div className="flex items-center gap-1 text-xs text-text-secondary">
+            <div className="flex items-center gap-1 text-xs" style={{ color: '#8EB69B' }}>
               <FaClock className="text-[10px]" />
               <span>{formatDate(video.publishedAt)}</span>
             </div>
@@ -74,7 +94,12 @@ const VideoCard = ({ video }) => {
 
           {/* Verified badge */}
           <div className="flex justify-end">
-            <span className="badge-verified text-[10px]">
+            <span className="px-2 py-0.5 text-[10px] rounded-full"
+                  style={{
+                    backgroundColor: '#235347',
+                    color: '#DAF1DE',
+                    border: '1px solid #8EB69B'
+                  }}>
               ✓ Educational
             </span>
           </div>
