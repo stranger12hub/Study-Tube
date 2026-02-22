@@ -8,25 +8,27 @@ export default {
     extend: {
       colors: {
         dark: {
-          50: '#f7f7f8',
-          100: '#eeeef0',
-          200: '#d9d9de',
-          300: '#b8b9c2',
-          400: '#9293a1',
-          500: '#747685',
-          600: '#5d5f6d',
-          700: '#4c4d59',
-          800: '#40414b',
-          900: '#2c2c33',
-          950: '#1a1a1f',
+          50: '#f5f3f0',  // Warm off-white
+          100: '#e8e2d9',  // Warm light
+          200: '#d1c7b8',  // Warm medium
+          300: '#b9ab97',  // Warm tan
+          400: '#a28f76',  // Warm brown
+          500: '#8b7355',  // Rich brown
+          600: '#6f5c44',  // Dark brown
+          700: '#534433',  // Deep brown
+          800: '#382d22',  // Espresso
+          900: '#1d1711',  // Dark espresso
+          950: '#0f0c09',  // Almost black warm
         },
-        accent: {
-          blue: '#3b82f6',
-          purple: '#8b5cf6',
-          pink: '#ec4899',
-          green: '#10b981',
-          red: '#ef4444',
-          yellow: '#f59e0b',
+        elegant: {
+          gold: '#c6a15b',     // Rich gold
+          bronze: '#b17f4a',   // Warm bronze
+          copper: '#b46f4c',   // Copper accent
+          plum: '#5d3a4f',     // Deep plum
+          wine: '#6b3e4f',     // Wine red
+          forest: '#2d4f3e',   // Deep forest green
+          charcoal: '#2a2a2a', // Rich charcoal
+          cream: '#f5e6d3',    // Cream accent
         }
       },
       animation: {
@@ -36,8 +38,8 @@ export default {
         'slide-up': 'slide-up 0.3s ease-out',
         'slide-down': 'slide-down 0.2s ease-out',
         'bounce-slow': 'bounce 2s infinite',
-        'progress': 'progress 1s ease-out forwards',
         'shimmer': 'shimmer 2s infinite',
+        'glow': 'glow 2s ease-in-out infinite',
       },
       keyframes: {
         gradient: {
@@ -74,13 +76,17 @@ export default {
             transform: 'translateY(0)'
           }
         },
-        'progress': {
-          'from': { 'stroke-dashoffset': '440' },
-          'to': { 'stroke-dashoffset': '0' }
-        },
         'shimmer': {
           '0%': { 'background-position': '-1000px 0' },
           '100%': { 'background-position': '1000px 0' }
+        },
+        'glow': {
+          '0%, 100%': { 
+            'box-shadow': '0 0 5px rgba(198, 161, 91, 0.3), 0 0 20px rgba(198, 161, 91, 0.2)'
+          },
+          '50%': { 
+            'box-shadow': '0 0 20px rgba(198, 161, 91, 0.5), 0 0 40px rgba(198, 161, 91, 0.3)'
+          }
         }
       },
       backgroundSize: {
