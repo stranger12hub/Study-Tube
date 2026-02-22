@@ -7,29 +7,24 @@ export default {
   theme: {
     extend: {
       colors: {
-        // DARK GREEN BASE - Primary background
-        dark: {
-          base: '#051F20',
-          secondary: '#0B2B26',
+        // Deep Green Palette - No warm tones
+        green: {
+          darkest: '#051F20',
+          darker: '#0B2B26',
+          dark: '#163832',
+          medium: '#235347',
+          light: '#8EB69B',
+          lightest: '#DAF1DE',
         },
-        // CARD SURFACES
-        card: {
-          DEFAULT: '#163832',
-          hover: '#235347',
-        },
-        // ACCENTS
-        accent: {
-          primary: '#8EB69B',
-          light: '#DAF1DE',
-        }
       },
-      // Remove all default color utilities by not extending
-      // This ensures ONLY our colors are available
+      backgroundImage: {
+        'hero-gradient': 'radial-gradient(circle at 30% 40%, #235347 0%, #163832 35%, #0B2B26 65%, #051F20 100%)',
+        'glow-green': 'radial-gradient(circle, rgba(142, 182, 155, 0.25) 0%, rgba(142, 182, 155, 0.15) 40%, transparent 70%)',
+      },
+      animation: {
+        'pulse-green': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
     },
-  },
-  // IMPORTANT: Disable Tailwind's default colors
-  corePlugins: {
-    // You can keep this empty or add specific plugins
   },
   plugins: [],
 }
