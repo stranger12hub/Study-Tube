@@ -1,23 +1,87 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import { FaEye, FaThumbsUp, FaCalendar, FaShare, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaEye, FaThumbsUp, FaCalendar, FaShare, FaExternalLinkAlt, FaRedoAlt } from 'react-icons/fa';
 import Button from '../components/Button';
 
 const Watch = () => {
   const { videoId } = useParams();
+  const [searchParams] = useSearchParams();
   const [video, setVideo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showShare, setShowShare] = useState(false);
+  const [resumeTime, setResumeTime] = useState(0);
+  const [showResumePrompt, setShowResumePrompt] = useState(false);
+  
+  const playerRef = useRef(null);
+  const playerReadyRef = useRef(false);
+  const saveIntervalRef = useRef(null);
 
-  // Function to save video to history
+  // Load YouTube API
+  useEffect(() => {
+    // Load YouTube IFrame API
+    if (!window.YT) {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      window.onYouTubeIframeAPIReady = initPlayer;
+      document.body.appendChild(tag);
+    } else if (window.YT && window.YT.Player) {
+      initPlayer();
+    }
+  }, [video]);
+
+  // Save progress every 5 seconds
+  useEffect(() => {
+    if (!playerReadyRef.current) return;
+
+    saveIntervalRef.current = setInterval(() => {
+      if (playerRef.current && playerRef.current.getCurrentTime) {
+        const currentTime = playerRef.current.getCurrentTime();
+        if (currentTime > 0) {
+          localStorage.setItem(`video-progress-${videoId}`, Math.floor(currentTime).toString());
+          
+          // Also update history with timestamp
+          updateHistoryTimestamp(Math.floor(currentTime));
+        }
+      }
+    }, 5000);
+
+    return () => {
+      if (saveIntervalRef.current) {
+        clearInterval(saveIntervalRef.current);
+      }
+    };
+  }, [videoId, playerReadyRef.current]);
+
+  // Function to update history with timestamp
+  const updateHistoryTimestamp = (timestamp) => {
+    try {
+      const history = JSON.parse(localStorage.getItem('studytube-watch-history') || '[]');
+      const updatedHistory = history.map(item => {
+        if (item.videoId === videoId) {
+          return {
+            ...item,
+            timestamp: timestamp,
+            lastWatched: new Date().toISOString()
+          };
+        }
+        return item;
+      });
+      localStorage.setItem('studytube-watch-history', JSON.stringify(updatedHistory));
+    } catch (e) {
+      console.error('Error updating history:', e);
+    }
+  };
+
+  // Save to history when video loads
   const saveToHistory = (videoData) => {
     try {
-      // Get existing history
       const history = JSON.parse(localStorage.getItem('studytube-watch-history') || '[]');
       
-      // Create new history entry
+      // Check if video already in history
+      const existingIndex = history.findIndex(item => item.videoId === videoId);
+      
       const newEntry = {
         videoId: videoId,
         title: videoData.title,
@@ -27,21 +91,20 @@ const Watch = () => {
         lastWatched: new Date().toISOString()
       };
       
-      // Remove duplicate if exists
-      const filtered = history.filter(item => item.videoId !== videoId);
-      
-      // Add new entry at beginning
-      filtered.unshift(newEntry);
+      let updatedHistory;
+      if (existingIndex !== -1) {
+        // Update existing entry
+        updatedHistory = [...history];
+        updatedHistory[existingIndex] = newEntry;
+      } else {
+        // Add new entry at beginning
+        updatedHistory = [newEntry, ...history];
+      }
       
       // Keep only last 50 videos
-      const trimmed = filtered.slice(0, 50);
-      
-      // Save to localStorage
+      const trimmed = updatedHistory.slice(0, 50);
       localStorage.setItem('studytube-watch-history', JSON.stringify(trimmed));
       
-      console.log('✅ Saved to history:', newEntry.title);
-      
-      // Dispatch event to notify history page
       window.dispatchEvent(new Event('videoWatched'));
     } catch (e) {
       console.error('Error saving to history:', e);
@@ -56,8 +119,19 @@ const Watch = () => {
         const response = await axios.get(`${API_URL}/api/search/video/${videoId}`);
         setVideo(response.data);
         
-        // Save to history after video loads
+        // Save to history
         saveToHistory(response.data);
+        
+        // Check for saved progress
+        const savedTime = localStorage.getItem(`video-progress-${videoId}`);
+        const urlTime = searchParams.get('t');
+        
+        if (urlTime) {
+          setResumeTime(parseInt(urlTime));
+        } else if (savedTime) {
+          setResumeTime(parseInt(savedTime));
+          setShowResumePrompt(true);
+        }
         
       } catch (err) {
         setError(err.response?.data?.message || 'Failed to load video');
@@ -69,11 +143,71 @@ const Watch = () => {
     fetchVideo();
   }, [videoId]);
 
+  const initPlayer = () => {
+    if (!playerRef.current && window.YT && window.YT.Player && video) {
+      playerRef.current = new window.YT.Player('youtube-player', {
+        height: '100%',
+        width: '100%',
+        videoId: videoId,
+        playerVars: {
+          autoplay: 1,
+          controls: 1,
+          modestbranding: 1,
+          rel: 0,
+          start: resumeTime
+        },
+        events: {
+          onReady: () => {
+            playerReadyRef.current = true;
+          },
+          onStateChange: (event) => {
+            // Video ended (0)
+            if (event.data === 0) {
+              localStorage.removeItem(`video-progress-${videoId}`);
+              updateHistoryTimestamp(0);
+            }
+            // Video paused (2)
+            if (event.data === 2 && playerRef.current) {
+              const currentTime = playerRef.current.getCurrentTime();
+              if (currentTime > 0) {
+                localStorage.setItem(`video-progress-${videoId}`, Math.floor(currentTime).toString());
+                updateHistoryTimestamp(Math.floor(currentTime));
+              }
+            }
+          }
+        }
+      });
+    }
+  };
+
+  const handleResume = () => {
+    if (playerRef.current && playerRef.current.seekTo) {
+      playerRef.current.seekTo(resumeTime, true);
+      setShowResumePrompt(false);
+    }
+  };
+
+  const handleStartOver = () => {
+    if (playerRef.current && playerRef.current.seekTo) {
+      playerRef.current.seekTo(0, true);
+      setShowResumePrompt(false);
+      localStorage.removeItem(`video-progress-${videoId}`);
+      updateHistoryTimestamp(0);
+    }
+  };
+
   const formatNumber = (num) => {
     if (!num) return '0';
     if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
     if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
     return num.toString();
+  };
+
+  const formatTime = (seconds) => {
+    if (!seconds) return '0:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   const handleShare = () => {
@@ -89,11 +223,6 @@ const Watch = () => {
         <div className="mt-6 space-y-4">
           <div className="h-8 bg-gray-200 rounded w-3/4 animate-pulse" />
           <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse" />
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-20 bg-gray-200 rounded animate-pulse" />
-            ))}
-          </div>
         </div>
       </div>
     );
@@ -117,14 +246,37 @@ const Watch = () => {
   return (
     <div className="max-w-5xl mx-auto">
       {/* Video Player */}
-      <div className="aspect-video bg-black rounded-xl overflow-hidden">
-        <iframe
-          src={`https://www.youtube.com/embed/${videoId}`}
-          title={video.title}
-          className="w-full h-full"
-          allowFullScreen
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        />
+      <div className="aspect-video bg-black rounded-xl overflow-hidden relative">
+        <div id="youtube-player" className="w-full h-full" />
+        
+        {/* Resume Prompt */}
+        {showResumePrompt && (
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2
+                        bg-white rounded-lg shadow-xl p-4 flex items-center gap-4 z-10
+                        border border-gray-200 animate-fade-in">
+            <p className="text-gray-700">
+              Resume from <span className="font-semibold text-[#C47A4A]">
+                {formatTime(resumeTime)}
+              </span>?
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={handleResume}
+                className="px-3 py-1 bg-[#C47A4A] text-white rounded-md text-sm
+                         hover:bg-[#b06a3d] transition-colors"
+              >
+                Resume
+              </button>
+              <button
+                onClick={handleStartOver}
+                className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md text-sm
+                         hover:bg-gray-300 transition-colors flex items-center gap-1"
+              >
+                <FaRedoAlt size={12} /> Start Over
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Video Info */}
