@@ -13,9 +13,9 @@ const Button = ({
   ...props 
 }) => {
   const variants = {
-    primary: 'bg-[#C47A4A] text-white hover:bg-[#b06a3d] focus:ring-[#C47A4A]',
-    secondary: 'bg-white border-2 border-[#C47A4A] text-[#C47A4A] hover:bg-[#FEF6F0]',
-    outline: 'bg-transparent border-2 border-gray-300 text-gray-700 hover:bg-gray-50',
+    primary: 'bg-primary text-white hover:bg-primary-hover focus:ring-primary/50',
+    secondary: 'bg-transparent border-2 border-primary text-primary hover:bg-primary/10',
+    outline: 'bg-transparent border-2 border-[#2a2a2a] text-secondary hover:bg-[#1a1a1a] hover:text-white hover:border-primary',
   };
 
   const sizes = {
@@ -25,9 +25,10 @@ const Button = ({
   };
 
   const classes = [
-    'inline-flex items-center justify-center gap-2 rounded-lg font-medium',
-    'transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
+    'btn relative inline-flex items-center justify-center gap-2 rounded-lg font-medium',
+    'transition-all duration-300 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#0d0d0d]',
     'disabled:opacity-50 disabled:cursor-not-allowed',
+    'hover:scale-105 active:scale-95',
     variants[variant],
     sizes[size],
     fullWidth ? 'w-full' : '',
@@ -42,8 +43,8 @@ const Button = ({
       disabled={disabled}
       {...props}
     >
-      {icon && <span>{icon}</span>}
-      {children}
+      {icon && <span className="transition-transform group-hover:scale-110">{icon}</span>}
+      <span className="relative z-10">{children}</span>
     </button>
   );
 };

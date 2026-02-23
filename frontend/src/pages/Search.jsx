@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import VideoCard from '../components/VideoCard';
-import Button from '../components/Button';
-import { FaSearch, FaFilter, FaTimes, FaCheckCircle } from 'react-icons/fa';
+import { FaSearch, FaFilter } from 'react-icons/fa';
 
 const Search = () => {
   const [searchParams] = useSearchParams();
@@ -13,8 +12,8 @@ const Search = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [fromCache, setFromCache] = useState(false);
+  const [searchInput, setSearchInput] = useState(query || '');
   const [showFilters, setShowFilters] = useState(false);
-  const [filter, setFilter] = useState('all');
 
   useEffect(() => {
     if (!query) return;
@@ -38,29 +37,59 @@ const Search = () => {
     searchVideos();
   }, [query]);
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchInput.trim()) {
+      window.location.href = `/search?q=${encodeURIComponent(searchInput)}`;
+    }
+  };
+
+  // Empty state - no search query
   if (!query) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center animate-fadeIn">
-        <div className="text-center max-w-md">
-          <div className="w-24 h-24 bg-[#1a1a1a] rounded-2xl flex items-center justify-center
-                        mx-auto mb-6 border border-[#2a2a2a] group hover:border-primary 
-                        hover:scale-110 transition-all duration-300">
-            <FaSearch className="text-4xl text-primary" />
-          </div>
-          <h2 className="text-3xl font-bold text-white mb-3 animate-slideUp">
-            Search Videos
-          </h2>
-          <p className="text-secondary mb-6 animate-slideUp" style={{ animationDelay: '100ms' }}>
-            Enter a search term to find educational content from curated channels
+      <div className="max-w-7xl mx-auto px-6 py-10 min-h-screen">
+        <div className="text-center max-w-2xl mx-auto">
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            Search Educational Content
+          </h1>
+          <p className="text-gray-400 mb-8">
+            Find videos from Vivek Maths, Ram Maths, and other curated channels
           </p>
-          <div className="flex flex-wrap gap-2 justify-center animate-slideUp" style={{ animationDelay: '200ms' }}>
-            {['vivek maths', 'ram maths', '12th maths'].map(term => (
+          
+          {/* Centered Search Bar */}
+          <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
+            <div className="relative group">
+              <input
+                type="text"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                placeholder="Search for videos..."
+                className="w-full px-6 py-4 bg-[#141414] border border-[#2a2a2a] rounded-2xl
+                         text-white placeholder-gray-500
+                         focus:outline-none focus:ring-2 focus:ring-[#e66e23] focus:border-transparent
+                         transition-all duration-300 group-hover:border-[#e66e23]/50"
+              />
+              <button
+                type="submit"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2
+                         px-6 py-2 bg-[#e66e23] text-white rounded-xl
+                         hover:bg-[#cf5f1c] transition-all duration-300
+                         hover:scale-105 active:scale-95"
+              >
+                Search
+              </button>
+            </div>
+          </form>
+
+          {/* Popular Searches */}
+          <div className="mt-8 flex flex-wrap gap-2 justify-center">
+            {['vivek maths', 'ram maths', '12th maths', 'public exam 2026'].map(term => (
               <Link
                 key={term}
                 to={`/search?q=${encodeURIComponent(term)}`}
-                className="px-4 py-2 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg
-                         text-secondary hover:text-primary hover:border-primary
-                         hover:scale-105 transition-all duration-300"
+                className="px-4 py-2 bg-[#141414] border border-[#2a2a2a] rounded-xl
+                         text-gray-400 hover:text-white hover:border-[#e66e23]
+                         transition-all duration-300 hover:scale-105"
               >
                 {term}
               </Link>
@@ -71,19 +100,24 @@ const Search = () => {
     );
   }
 
+  // Loading state
   if (loading) {
     return (
-      <div className="space-y-6 animate-fadeIn">
-        <div className="bg-[#141414] border border-[#2a2a2a] rounded-xl p-6">
-          <div className="h-8 bg-[#1a1a1a] rounded w-64 mb-2 animate-pulse" />
-          <div className="h-4 bg-[#1a1a1a] rounded w-96 animate-pulse" />
+      <div className="max-w-7xl mx-auto px-6 py-10">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
+            Searching for "{query}"
+          </h1>
+          <p className="text-gray-400">Finding the best educational content...</p>
         </div>
+
+        {/* Results Grid Skeleton */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl overflow-hidden
-                                   animate-pulse">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="bg-[#141414] border border-[#2a2a2a] rounded-2xl overflow-hidden animate-pulse">
               <div className="aspect-video bg-[#2a2a2a]" />
-              <div className="p-4 space-y-2">
+              <div className="p-4 space-y-3">
                 <div className="h-4 bg-[#2a2a2a] rounded w-3/4" />
                 <div className="h-3 bg-[#2a2a2a] rounded w-full" />
                 <div className="h-3 bg-[#2a2a2a] rounded w-2/3" />
@@ -95,73 +129,63 @@ const Search = () => {
     );
   }
 
+  // Error state
   if (error) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="text-center max-w-md">
-          <div className="text-red-500 text-6xl mb-4 animate-bounce">⚠️</div>
+      <div className="max-w-7xl mx-auto px-6 py-10 min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-6xl mb-4">⚠️</div>
           <h2 className="text-2xl font-bold text-white mb-2">Search Failed</h2>
-          <p className="text-secondary mb-6">{error}</p>
-          <Button onClick={() => window.location.reload()}>Try Again</Button>
+          <p className="text-gray-400 mb-6">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-6 py-3 bg-[#e66e23] text-white rounded-xl
+                     hover:bg-[#cf5f1c] transition-all duration-300
+                     hover:scale-105 active:scale-95"
+          >
+            Try Again
+          </button>
         </div>
       </div>
     );
   }
 
+  // Results view
   return (
-    <div className="space-y-8 animate-fadeIn">
-      {/* Header with stats */}
-      <div className="bg-[#141414] border border-[#2a2a2a] rounded-xl p-6
-                    hover:border-primary/30 transition-all duration-300">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
-              Results for "<span className="text-primary">"{query}"</span>
-            </h1>
-            <div className="flex items-center gap-4">
-              <span className="text-secondary">
-                Found <span className="text-primary font-semibold">{videos.length}</span> videos
-              </span>
-              {fromCache && (
-                <span className="flex items-center gap-2 px-3 py-1 
-                               bg-primary/10 text-primary rounded-full
-                               border border-primary/30 text-sm animate-fadeIn">
-                  <FaCheckCircle size={12} />
-                  <span>Cached results</span>
-                </span>
-              )}
-            </div>
-          </div>
-
+    <div className="max-w-7xl mx-auto px-6 py-10">
+      {/* Header Section */}
+      <div className="mb-8">
+        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
+          Results for "{query}"
+        </h1>
+        <div className="flex items-center justify-between">
+          <p className="text-gray-400">
+            Found {videos.length} videos
+            {fromCache && ' (cached results)'}
+          </p>
+          
           {/* Filter Button */}
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg border
-                      transition-all duration-300 hover:scale-105 active:scale-95
-                      ${showFilters 
-                        ? 'bg-primary text-white border-primary' 
-                        : 'bg-[#1a1a1a] text-secondary border-[#2a2a2a] hover:bg-[#2a2a2a] hover:text-white'
-                      }`}
+            className="flex items-center gap-2 px-4 py-2 bg-[#141414] border border-[#2a2a2a] rounded-xl
+                     text-gray-400 hover:text-white hover:border-[#e66e23]
+                     transition-all duration-300 hover:scale-105 active:scale-95"
           >
-            <FaFilter size={14} className={`transition-transform duration-300 ${showFilters ? 'rotate-180' : ''}`} />
-            <span>Filters</span>
+            <FaFilter className={`transition-transform duration-300 ${showFilters ? 'rotate-180' : ''}`} />
+            <span>Filter</span>
           </button>
         </div>
 
         {/* Filter Panel */}
         {showFilters && (
-          <div className="mt-6 pt-6 border-t border-[#2a2a2a] animate-slideDown">
+          <div className="mt-4 p-4 bg-[#141414] border border-[#2a2a2a] rounded-xl animate-fadeIn">
             <div className="flex flex-wrap gap-2">
-              {['all', 'today', 'week', 'month'].map((period) => (
+              {['all', 'today', 'week', 'month', 'year'].map((period) => (
                 <button
                   key={period}
-                  onClick={() => setFilter(period)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium
-                            transition-all duration-300 hover:scale-105
-                            ${filter === period 
-                              ? 'bg-primary text-white' 
-                              : 'bg-[#1a1a1a] text-secondary hover:bg-[#2a2a2a] hover:text-white'
-                            }`}
+                  className="px-4 py-2 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg
+                           text-gray-400 hover:text-white hover:border-[#e66e23]
+                           transition-all duration-300 hover:scale-105"
                 >
                   {period === 'all' ? 'All Time' : period}
                 </button>
@@ -171,22 +195,29 @@ const Search = () => {
         )}
       </div>
 
-      {/* Video Grid */}
+      {/* Results Grid */}
       {videos.length === 0 ? (
-        <div className="text-center py-12 bg-[#141414] border border-[#2a2a2a] rounded-xl
-                      hover:border-primary/30 transition-all duration-300">
-          <FaSearch className="text-4xl text-secondary mx-auto mb-3" />
-          <p className="text-secondary">No videos found. Try a different search.</p>
+        <div className="text-center py-12 bg-[#141414] border border-[#2a2a2a] rounded-2xl">
+          <p className="text-gray-400">No videos found. Try a different search term.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {videos.map((video, index) => (
-            <div key={video.videoId} 
-                 className="animate-fadeIn"
-                 style={{ animationDelay: `${index * 50}ms` }}>
+            <div
+              key={video.videoId}
+              className="animate-fadeIn"
+              style={{ animationDelay: `${index * 50}ms` }}
+            >
               <VideoCard video={video} />
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Results count footer */}
+      {videos.length > 0 && (
+        <div className="mt-8 text-center text-sm text-gray-500">
+          Showing {videos.length} results • Powered by YouTube Data API
         </div>
       )}
     </div>

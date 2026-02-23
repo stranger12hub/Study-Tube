@@ -55,7 +55,7 @@ const VideoCard = ({ video }) => {
                         transition-all duration-300 transform
                         ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}>
             <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center
-                          shadow-lg shadow-primary/30 animate-pulse-glow">
+                          shadow-lg shadow-primary/30">
               <FaPlay className="text-white text-lg ml-0.5" />
             </div>
           </div>
@@ -105,7 +105,7 @@ const VideoCard = ({ video }) => {
             <span className="px-2 py-0.5 bg-[#2a2a2a] text-primary text-[10px] 
                          rounded-full border border-primary/30
                          group-hover:bg-primary/10 transition-colors duration-300">
-              ✓ Educational Channel
+              ✓ Educational
             </span>
           </div>
         </div>

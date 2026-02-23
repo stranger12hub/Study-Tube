@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import { FaEye, FaThumbsUp, FaCalendar, FaShare, FaExternalLinkAlt, FaRedoAlt } from 'react-icons/fa';
+import { FaEye, FaThumbsUp, FaCalendar, FaShare, FaExternalLinkAlt, FaRedoAlt, FaCheckCircle } from 'react-icons/fa';
 import Button from '../components/Button';
 
 const Watch = () => {
@@ -20,7 +20,6 @@ const Watch = () => {
 
   // Load YouTube API
   useEffect(() => {
-    // Load YouTube IFrame API
     if (!window.YT) {
       const tag = document.createElement('script');
       tag.src = 'https://www.youtube.com/iframe_api';
@@ -69,6 +68,7 @@ const Watch = () => {
         return item;
       });
       localStorage.setItem('studytube-watch-history', JSON.stringify(updatedHistory));
+      window.dispatchEvent(new Event('videoWatched'));
     } catch (e) {
       console.error('Error updating history:', e);
     }
@@ -79,7 +79,6 @@ const Watch = () => {
     try {
       const history = JSON.parse(localStorage.getItem('studytube-watch-history') || '[]');
       
-      // Check if video already in history
       const existingIndex = history.findIndex(item => item.videoId === videoId);
       
       const newEntry = {
@@ -93,18 +92,14 @@ const Watch = () => {
       
       let updatedHistory;
       if (existingIndex !== -1) {
-        // Update existing entry
         updatedHistory = [...history];
         updatedHistory[existingIndex] = newEntry;
       } else {
-        // Add new entry at beginning
         updatedHistory = [newEntry, ...history];
       }
       
-      // Keep only last 50 videos
       const trimmed = updatedHistory.slice(0, 50);
       localStorage.setItem('studytube-watch-history', JSON.stringify(trimmed));
-      
       window.dispatchEvent(new Event('videoWatched'));
     } catch (e) {
       console.error('Error saving to history:', e);
@@ -119,10 +114,8 @@ const Watch = () => {
         const response = await axios.get(`${API_URL}/api/search/video/${videoId}`);
         setVideo(response.data);
         
-        // Save to history
         saveToHistory(response.data);
         
-        // Check for saved progress
         const savedTime = localStorage.getItem(`video-progress-${videoId}`);
         const urlTime = searchParams.get('t');
         
@@ -161,12 +154,10 @@ const Watch = () => {
             playerReadyRef.current = true;
           },
           onStateChange: (event) => {
-            // Video ended (0)
             if (event.data === 0) {
               localStorage.removeItem(`video-progress-${videoId}`);
               updateHistoryTimestamp(0);
             }
-            // Video paused (2)
             if (event.data === 2 && playerRef.current) {
               const currentTime = playerRef.current.getCurrentTime();
               if (currentTime > 0) {
@@ -218,11 +209,16 @@ const Watch = () => {
 
   if (loading) {
     return (
-      <div className="max-w-5xl mx-auto">
-        <div className="aspect-video bg-gray-200 rounded-xl animate-pulse" />
+      <div className="max-w-6xl mx-auto px-4 py-8 animate-fadeIn">
+        <div className="aspect-video bg-[#1a1a1a] rounded-2xl animate-pulse" />
         <div className="mt-6 space-y-4">
-          <div className="h-8 bg-gray-200 rounded w-3/4 animate-pulse" />
-          <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse" />
+          <div className="h-8 bg-[#1a1a1a] rounded-lg w-3/4 animate-pulse" />
+          <div className="h-4 bg-[#1a1a1a] rounded-lg w-1/2 animate-pulse" />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="h-24 bg-[#1a1a1a] rounded-xl animate-pulse" />
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -231,10 +227,10 @@ const Watch = () => {
   if (error || !video) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-red-500 text-6xl mb-4">⚠️</div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Video Unavailable</h2>
-          <p className="text-gray-600 mb-4">{error || 'Could not load video'}</p>
+        <div className="text-center max-w-md">
+          <div className="text-6xl mb-4 animate-bounce">⚠️</div>
+          <h2 className="text-2xl font-bold text-white mb-2">Video Unavailable</h2>
+          <p className="text-secondary mb-6">{error || 'Could not load video'}</p>
           <Link to="/">
             <Button>Go Home</Button>
           </Link>
@@ -244,33 +240,36 @@ const Watch = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto">
-      {/* Video Player */}
-      <div className="aspect-video bg-black rounded-xl overflow-hidden relative">
+    <div className="max-w-6xl mx-auto px-4 py-8 animate-fadeIn">
+      {/* Video Player Container */}
+      <div className="relative aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border border-[#2a2a2a]">
         <div id="youtube-player" className="w-full h-full" />
         
         {/* Resume Prompt */}
         {showResumePrompt && (
           <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2
-                        bg-white rounded-lg shadow-xl p-4 flex items-center gap-4 z-10
-                        border border-gray-200 animate-fade-in">
-            <p className="text-gray-700">
-              Resume from <span className="font-semibold text-[#C47A4A]">
+                        bg-[#141414] border border-primary rounded-xl 
+                        shadow-2xl p-4 flex items-center gap-4 z-10
+                        animate-slideUp">
+            <p className="text-white">
+              Resume from <span className="text-primary font-semibold">
                 {formatTime(resumeTime)}
               </span>?
             </p>
             <div className="flex gap-2">
               <button
                 onClick={handleResume}
-                className="px-3 py-1 bg-[#C47A4A] text-white rounded-md text-sm
-                         hover:bg-[#b06a3d] transition-colors"
+                className="px-4 py-2 bg-primary text-white rounded-lg text-sm
+                         hover:bg-primary-hover hover:scale-105 active:scale-95
+                         transition-all duration-300"
               >
                 Resume
               </button>
               <button
                 onClick={handleStartOver}
-                className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md text-sm
-                         hover:bg-gray-300 transition-colors flex items-center gap-1"
+                className="px-4 py-2 bg-[#2a2a2a] text-white rounded-lg text-sm
+                         hover:bg-[#3a3a3a] hover:scale-105 active:scale-95
+                         transition-all duration-300 flex items-center gap-1"
               >
                 <FaRedoAlt size={12} /> Start Over
               </button>
@@ -279,89 +278,111 @@ const Watch = () => {
         )}
       </div>
 
-      {/* Video Info */}
-      <div className="mt-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">{video.title}</h1>
-        
-        <div className="flex items-center justify-between flex-wrap gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#C47A4A] rounded-full flex items-center justify-center">
-              <span className="text-white font-bold">
-                {video.channelTitle?.charAt(0).toUpperCase()}
-              </span>
-            </div>
-            <div>
-              <h3 className="font-medium text-gray-900">{video.channelTitle}</h3>
-              <p className="text-sm text-gray-500">Educational Channel</p>
-            </div>
-          </div>
-
-          <div className="flex gap-2">
-            <button
-              onClick={handleShare}
-              className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700
-                       hover:bg-gray-50 transition-colors relative"
-            >
-              <FaShare className="inline mr-2" />
-              Share
-              {showShare && (
-                <span className="absolute -top-10 left-1/2 transform -translate-x-1/2
-                                 bg-green-500 text-white text-sm px-3 py-1 rounded">
-                  Copied!
+      {/* Video Info Section */}
+      <div className="mt-6 space-y-6">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold text-white mb-3">
+            {video.title}
+          </h1>
+          
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            {/* Channel Info */}
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center
+                            shadow-lg shadow-primary/30">
+                <span className="text-white font-bold text-lg">
+                  {video.channelTitle?.charAt(0).toUpperCase()}
                 </span>
-              )}
-            </button>
-            
-            <a
-              href={`https://youtu.be/${videoId}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700
-                       hover:bg-gray-50 transition-colors"
-            >
-              <FaExternalLinkAlt className="inline mr-2" />
-              YouTube
-            </a>
+              </div>
+              <div>
+                <h3 className="font-semibold text-white">{video.channelTitle}</h3>
+                <p className="text-sm text-secondary flex items-center gap-1">
+                  <FaCheckCircle className="text-primary" size={12} />
+                  Educational Channel
+                </p>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-2">
+              <button
+                onClick={handleShare}
+                className="px-4 py-2 bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl
+                         text-secondary hover:text-white hover:border-primary
+                         hover:scale-105 active:scale-95 transition-all duration-300
+                         relative"
+              >
+                <FaShare className="inline mr-2" size={14} />
+                Share
+                {showShare && (
+                  <span className="absolute -top-10 left-1/2 transform -translate-x-1/2
+                                 bg-primary text-white text-sm px-3 py-1 rounded-lg
+                                 animate-slideUp">
+                    Copied!
+                  </span>
+                )}
+              </button>
+              
+              <a
+                href={`https://youtu.be/${videoId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl
+                         text-secondary hover:text-white hover:border-primary
+                         hover:scale-105 active:scale-95 transition-all duration-300"
+              >
+                <FaExternalLinkAlt className="inline mr-2" size={14} />
+                YouTube
+              </a>
+            </div>
           </div>
         </div>
 
         {/* Stats Grid */}
-        <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-gray-50 rounded-lg p-4 text-center">
-            <FaEye className="text-[#C47A4A] text-xl mx-auto mb-2" />
-            <div className="text-lg font-bold text-gray-900">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-4 text-center
+                        hover:border-primary transition-all duration-300 group">
+            <FaEye className="text-primary text-xl mx-auto mb-2 group-hover:scale-110 transition-transform" />
+            <div className="text-lg font-bold text-white">
               {formatNumber(video.viewCount)}
             </div>
-            <div className="text-xs text-gray-500">Views</div>
+            <div className="text-xs text-secondary">Views</div>
           </div>
           
-          <div className="bg-gray-50 rounded-lg p-4 text-center">
-            <FaThumbsUp className="text-[#C47A4A] text-xl mx-auto mb-2" />
-            <div className="text-lg font-bold text-gray-900">
+          <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-4 text-center
+                        hover:border-primary transition-all duration-300 group">
+            <FaThumbsUp className="text-primary text-xl mx-auto mb-2 group-hover:scale-110 transition-transform" />
+            <div className="text-lg font-bold text-white">
               {formatNumber(video.likeCount)}
             </div>
-            <div className="text-xs text-gray-500">Likes</div>
+            <div className="text-xs text-secondary">Likes</div>
           </div>
           
-          <div className="bg-gray-50 rounded-lg p-4 text-center">
-            <FaCalendar className="text-[#C47A4A] text-xl mx-auto mb-2" />
-            <div className="text-sm font-bold text-gray-900">
+          <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-4 text-center
+                        hover:border-primary transition-all duration-300 group">
+            <FaCalendar className="text-primary text-xl mx-auto mb-2 group-hover:scale-110 transition-transform" />
+            <div className="text-sm font-bold text-white">
               {new Date(video.publishedAt).toLocaleDateString()}
             </div>
-            <div className="text-xs text-gray-500">Published</div>
+            <div className="text-xs text-secondary">Published</div>
           </div>
           
-          <div className="bg-gray-50 rounded-lg p-4 text-center">
-            <div className="text-xl font-bold text-[#C47A4A] mb-2">✓</div>
-            <div className="text-sm font-bold text-gray-900">Verified</div>
-            <div className="text-xs text-gray-500">Channel</div>
+          <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-4 text-center
+                        hover:border-primary transition-all duration-300 group">
+            <div className="text-xl font-bold text-primary mb-2 group-hover:scale-110 transition-transform">✓</div>
+            <div className="text-sm font-bold text-white">Verified</div>
+            <div className="text-xs text-secondary">Channel</div>
           </div>
         </div>
 
         {/* Description */}
-        <div className="mt-6 bg-gray-50 rounded-xl p-6">
-          <h3 className="font-semibold text-gray-900 mb-2">Description</h3>
-          <p className="text-gray-600 whitespace-pre-wrap">
+        <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6
+                      hover:border-primary/30 transition-all duration-300">
+          <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
+            <span className="w-1 h-5 bg-primary rounded-full" />
+            Description
+          </h3>
+          <p className="text-secondary whitespace-pre-wrap leading-relaxed">
             {video.description || 'No description available for this video.'}
           </p>
         </div>
