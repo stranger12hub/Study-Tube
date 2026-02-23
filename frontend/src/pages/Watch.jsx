@@ -11,6 +11,43 @@ const Watch = () => {
   const [error, setError] = useState(null);
   const [showShare, setShowShare] = useState(false);
 
+  // Function to save video to history
+  const saveToHistory = (videoData) => {
+    try {
+      // Get existing history
+      const history = JSON.parse(localStorage.getItem('studytube-watch-history') || '[]');
+      
+      // Create new history entry
+      const newEntry = {
+        videoId: videoId,
+        title: videoData.title,
+        thumbnail: videoData.thumbnail,
+        channelTitle: videoData.channelTitle,
+        timestamp: 0,
+        lastWatched: new Date().toISOString()
+      };
+      
+      // Remove duplicate if exists
+      const filtered = history.filter(item => item.videoId !== videoId);
+      
+      // Add new entry at beginning
+      filtered.unshift(newEntry);
+      
+      // Keep only last 50 videos
+      const trimmed = filtered.slice(0, 50);
+      
+      // Save to localStorage
+      localStorage.setItem('studytube-watch-history', JSON.stringify(trimmed));
+      
+      console.log('✅ Saved to history:', newEntry.title);
+      
+      // Dispatch event to notify history page
+      window.dispatchEvent(new Event('videoWatched'));
+    } catch (e) {
+      console.error('Error saving to history:', e);
+    }
+  };
+
   useEffect(() => {
     const fetchVideo = async () => {
       try {
@@ -18,6 +55,10 @@ const Watch = () => {
         const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
         const response = await axios.get(`${API_URL}/api/search/video/${videoId}`);
         setVideo(response.data);
+        
+        // Save to history after video loads
+        saveToHistory(response.data);
+        
       } catch (err) {
         setError(err.response?.data?.message || 'Failed to load video');
       } finally {
