@@ -8,80 +8,28 @@
     <title>StudyTube - Educational Video Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-      @keyframes fadeScaleIn {
-        from {
-          opacity: 0;
-          transform: scale(0.95) translateY(10px);
-        }
-        to {
-          opacity: 1;
-          transform: scale(1) translateY(0);
-        }
-      }
-      
-      @keyframes pulseGlow {
-        0%, 100% {
-          box-shadow: 0 0 10px rgba(107, 114, 128, 0.3);
-        }
-        50% {
-          box-shadow: 0 0 20px rgba(107, 114, 128, 0.5);
-        }
-      }
-      
-      @keyframes timerPulse {
-        0%, 100% {
-          transform: scale(1);
-        }
-        50% {
-          transform: scale(1.02);
-        }
-      }
-      
-      .pomodoro-popup {
-        animation: fadeScaleIn 0.2s ease-out;
-        transform-origin: bottom right;
-      }
-      
-      .timer-pulse {
-        animation: timerPulse 2s ease-in-out infinite;
-      }
-      
-      .glow-animation {
-        animation: pulseGlow 2s ease-in-out infinite;
-      }
-      
-      .mode-transition {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-      
-      .time-change {
-        animation: fadeScaleIn 0.2s ease-out;
-      }
-    </style>
   </head>
   <body class="bg-[#0d0d0d]">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
 
-    <!-- Floating Pomodoro Timer Widget -->
-    <!-- Floating Icon -->
-    <div id="pomodoro-container" style="position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999;">
-      <button id="pomodoro-float-icon" class="w-14 h-14 bg-[#1a1a1a] border border-[#2a2a2a] rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 transition-all duration-300 glow-animation">
+    <!-- Floating Pomodoro Timer Widget - Simple Version -->
+    <div style="position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999;">
+      <!-- Floating Icon -->
+      <button id="pomodoro-float-icon" class="w-14 h-14 bg-[#1a1a1a] border border-[#2a2a2a] rounded-full flex items-center justify-center shadow-lg hover:bg-[#2a2a2a] transition-colors">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"/>
           <polyline points="12 6 12 12 16 14"/>
         </svg>
-        <span class="absolute -top-1 -right-1 w-3 h-3 bg-primary rounded-full animate-ping"></span>
       </button>
 
       <!-- Pomodoro Popup -->
-      <div id="pomodoro-popup" class="absolute bottom-16 right-0 w-[320px] bg-[#141414] border border-[#2a2a2a] rounded-2xl shadow-2xl hidden pomodoro-popup">
+      <div id="pomodoro-popup" class="absolute bottom-16 right-0 w-[320px] bg-[#141414] border border-[#2a2a2a] rounded-2xl shadow-2xl hidden">
         <div class="p-5">
           <!-- Header -->
           <div class="flex items-center justify-between mb-4">
             <h3 class="text-lg font-semibold text-white">Pomodoro Timer</h3>
-            <button id="close-popup" class="text-secondary hover:text-white transition-colors hover:rotate-90 transform duration-300">
+            <button id="close-popup" class="text-secondary hover:text-white">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="18" y1="6" x2="6" y2="18"/>
                 <line x1="6" y1="6" x2="18" y2="18"/>
@@ -91,44 +39,43 @@
 
           <!-- Mode Selector -->
           <div class="flex gap-1 mb-5 bg-[#1a1a1a] p-1 rounded-lg">
-            <button id="work-mode" class="mode-btn mode-transition flex-1 px-3 py-2 rounded-md text-xs font-medium bg-primary text-white">
+            <button id="work-mode" class="mode-btn flex-1 px-3 py-2 rounded-md text-xs font-medium bg-primary text-white">
               Work
             </button>
-            <button id="short-break-mode" class="mode-btn mode-transition flex-1 px-3 py-2 rounded-md text-xs font-medium bg-[#1a1a1a] text-secondary hover:bg-[#2a2a2a] hover:text-white">
+            <button id="short-break-mode" class="mode-btn flex-1 px-3 py-2 rounded-md text-xs font-medium bg-[#1a1a1a] text-secondary hover:bg-[#2a2a2a] hover:text-white">
               Short
             </button>
-            <button id="long-break-mode" class="mode-btn mode-transition flex-1 px-3 py-2 rounded-md text-xs font-medium bg-[#1a1a1a] text-secondary hover:bg-[#2a2a2a] hover:text-white">
+            <button id="long-break-mode" class="mode-btn flex-1 px-3 py-2 rounded-md text-xs font-medium bg-[#1a1a1a] text-secondary hover:bg-[#2a2a2a] hover:text-white">
               Long
             </button>
           </div>
 
           <!-- Timer Display -->
           <div class="text-center mb-5">
-            <div id="timer-display" class="text-5xl font-bold text-white mb-2 font-mono timer-pulse">25:00</div>
-            <div id="adjust-hint" class="text-xs text-secondary">+/- only available in Work mode</div>
+            <div id="timer-display" class="text-5xl font-bold text-white mb-2 font-mono">25:00</div>
+            <div id="adjust-hint" class="text-xs text-secondary">+/- only in Work mode</div>
           </div>
 
           <!-- Time Adjustment -->
           <div class="flex items-center justify-center gap-3 mb-5">
-            <button id="decrease-time" class="w-10 h-10 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-primary hover:bg-[#2a2a2a] hover:text-white transition-all duration-300 hover:scale-105 active:scale-95 text-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed">
+            <button id="decrease-time" class="w-10 h-10 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-primary hover:bg-[#2a2a2a] hover:text-white text-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed">
               -
             </button>
-            <span id="minutes-display" class="text-lg text-white w-12 text-center mode-transition">25</span>
-            <button id="increase-time" class="w-10 h-10 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-primary hover:bg-[#2a2a2a] hover:text-white transition-all duration-300 hover:scale-105 active:scale-95 text-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed">
+            <span id="minutes-display" class="text-lg text-white w-12 text-center">25</span>
+            <button id="increase-time" class="w-10 h-10 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-primary hover:bg-[#2a2a2a] hover:text-white text-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed">
               +
             </button>
           </div>
 
           <!-- Control Buttons -->
           <div class="flex gap-2">
-            <button id="start-timer" class="flex-1 px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-hover transition-all duration-300 hover:scale-105 active:scale-95 relative overflow-hidden group">
-              <span class="relative z-10">Start</span>
-              <span class="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-100 transition-transform duration-500"></span>
+            <button id="start-timer" class="flex-1 px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-hover">
+              Start
             </button>
-            <button id="pause-timer" class="flex-1 px-4 py-2.5 bg-[#1a1a1a] border border-[#2a2a2a] text-secondary rounded-lg text-sm font-medium hover:bg-[#2a2a2a] hover:text-white transition-all duration-300 hover:scale-105 active:scale-95">
+            <button id="pause-timer" class="flex-1 px-4 py-2.5 bg-[#1a1a1a] border border-[#2a2a2a] text-secondary rounded-lg text-sm font-medium hover:bg-[#2a2a2a] hover:text-white">
               Pause
             </button>
-            <button id="reset-timer" class="flex-1 px-4 py-2.5 bg-[#1a1a1a] border border-[#2a2a2a] text-secondary rounded-lg text-sm font-medium hover:bg-[#2a2a2a] hover:text-white transition-all duration-300 hover:scale-105 active:scale-95">
+            <button id="reset-timer" class="flex-1 px-4 py-2.5 bg-[#1a1a1a] border border-[#2a2a2a] text-secondary rounded-lg text-sm font-medium hover:bg-[#2a2a2a] hover:text-white">
               Reset
             </button>
           </div>
@@ -136,11 +83,12 @@
       </div>
     </div>
 
-    <!-- Pomodoro Timer JavaScript - Isolated in its own scope -->
+    <!-- Pomodoro Timer JavaScript - Simple Version -->
     <script>
+      // Simple Pomodoro Timer - No animations
       (function() {
-        // Wait for DOM to be fully loaded
-        document.addEventListener('DOMContentLoaded', function() {
+        // Wait for React to load
+        setTimeout(function() {
           // DOM Elements
           const floatIcon = document.getElementById('pomodoro-float-icon');
           const popup = document.getElementById('pomodoro-popup');
@@ -161,7 +109,7 @@
           const longBreakBtn = document.getElementById('long-break-mode');
           const modeBtns = document.querySelectorAll('.mode-btn');
 
-          // Check if elements exist
+          // Exit if elements don't exist
           if (!floatIcon || !popup) return;
 
           // Timer settings
@@ -207,6 +155,7 @@
                 stopTimer();
                 alert(`⏰ Timer finished!`);
                 
+                // Auto switch mode
                 if (currentMode === 'work') {
                   setMode('shortBreak');
                 } else {
@@ -227,52 +176,37 @@
             increaseBtn.disabled = !isWorkMode;
             decreaseBtn.disabled = !isWorkMode;
             
-            if (isWorkMode) {
-              adjustHint.textContent = '+/- to adjust by 10 min';
-              adjustHint.classList.remove('text-secondary');
-              adjustHint.classList.add('text-primary');
-            } else {
-              adjustHint.textContent = '+/- only available in Work mode';
-              adjustHint.classList.remove('text-primary');
-              adjustHint.classList.add('text-secondary');
-            }
+            adjustHint.textContent = isWorkMode ? '+/- to adjust by 10 min' : '+/- only in Work mode';
           }
 
           // Set mode
           function setMode(mode) {
             stopTimer();
             
+            // Update button styles
             modeBtns.forEach(btn => {
-              if (btn) {
-                btn.classList.remove('bg-primary', 'text-white');
-                btn.classList.add('bg-[#1a1a1a]', 'text-secondary');
-              }
+              btn?.classList.remove('bg-primary', 'text-white');
+              btn?.classList.add('bg-[#1a1a1a]', 'text-secondary');
             });
             
             currentMode = mode;
             
             switch(mode) {
               case 'work':
-                if (workBtn) {
-                  workBtn.classList.remove('bg-[#1a1a1a]', 'text-secondary');
-                  workBtn.classList.add('bg-primary', 'text-white');
-                }
+                workBtn?.classList.remove('bg-[#1a1a1a]', 'text-secondary');
+                workBtn?.classList.add('bg-primary', 'text-white');
                 timeLeft = WORK_TIME * 60;
                 currentMinutes = WORK_TIME;
                 break;
               case 'shortBreak':
-                if (shortBreakBtn) {
-                  shortBreakBtn.classList.remove('bg-[#1a1a1a]', 'text-secondary');
-                  shortBreakBtn.classList.add('bg-primary', 'text-white');
-                }
+                shortBreakBtn?.classList.remove('bg-[#1a1a1a]', 'text-secondary');
+                shortBreakBtn?.classList.add('bg-primary', 'text-white');
                 timeLeft = SHORT_BREAK_TIME * 60;
                 currentMinutes = SHORT_BREAK_TIME;
                 break;
               case 'longBreak':
-                if (longBreakBtn) {
-                  longBreakBtn.classList.remove('bg-[#1a1a1a]', 'text-secondary');
-                  longBreakBtn.classList.add('bg-primary', 'text-white');
-                }
+                longBreakBtn?.classList.remove('bg-[#1a1a1a]', 'text-secondary');
+                longBreakBtn?.classList.add('bg-primary', 'text-white');
                 timeLeft = LONG_BREAK_TIME * 60;
                 currentMinutes = LONG_BREAK_TIME;
                 break;
@@ -290,7 +224,7 @@
 
           // Increase time
           function increaseTime() {
-            if (isRunning || currentMode !== 'work' || !increaseBtn) return;
+            if (isRunning || currentMode !== 'work') return;
             currentMinutes += 10;
             timeLeft = currentMinutes * 60;
             updateDisplay();
@@ -298,7 +232,7 @@
 
           // Decrease time
           function decreaseTime() {
-            if (isRunning || currentMode !== 'work' || !decreaseBtn) return;
+            if (isRunning || currentMode !== 'work') return;
             if (currentMinutes > 10) {
               currentMinutes -= 10;
             } else {
@@ -311,11 +245,7 @@
           // Toggle popup
           function togglePopup() {
             if (popup) {
-              if (popup.classList.contains('hidden')) {
-                popup.classList.remove('hidden');
-              } else {
-                popup.classList.add('hidden');
-              }
+              popup.classList.toggle('hidden');
             }
           }
 
@@ -330,9 +260,7 @@
 
           // Event listeners
           if (floatIcon) floatIcon.addEventListener('click', togglePopup);
-          if (closeBtn) closeBtn.addEventListener('click', () => {
-            if (popup) popup.classList.add('hidden');
-          });
+          if (closeBtn) closeBtn.addEventListener('click', () => popup?.classList.add('hidden'));
           
           if (startBtn) startBtn.addEventListener('click', startTimer);
           if (pauseBtn) pauseBtn.addEventListener('click', stopTimer);
@@ -347,7 +275,7 @@
           // Initialize
           updateDisplay();
           updateAdjustButtons();
-        });
+        }, 100); // Small delay to let React load
       })();
     </script>
   </body>
