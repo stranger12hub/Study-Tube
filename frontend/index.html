@@ -9,6 +9,203 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body>
+    <!-- Pomodoro Timer Section -->
+<section class="max-w-2xl mx-auto px-4 py-8 animate-fadeIn">
+  <div class="bg-[#141414] border border-[#2a2a2a] rounded-2xl p-6 md:p-8 shadow-xl">
+    <h2 class="text-2xl md:text-3xl font-bold text-white mb-6 text-center">
+      <span class="text-primary">Pomodoro</span> Timer
+    </h2>
+    
+    <!-- Mode Selector -->
+    <div class="flex flex-wrap justify-center gap-2 mb-8">
+      <button id="pomodoro-mode" class="mode-btn active px-6 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 bg-primary text-white">
+        Pomodoro
+      </button>
+      <button id="short-break-mode" class="mode-btn px-6 py-2 bg-[#1a1a1a] text-secondary rounded-lg text-sm font-medium hover:bg-[#2a2a2a] hover:text-white transition-all duration-300 hover:scale-105">
+        Short Break
+      </button>
+      <button id="long-break-mode" class="mode-btn px-6 py-2 bg-[#1a1a1a] text-secondary rounded-lg text-sm font-medium hover:bg-[#2a2a2a] hover:text-white transition-all duration-300 hover:scale-105">
+        Long Break
+      </button>
+    </div>
+
+    <!-- Timer Display -->
+    <div class="text-center mb-8">
+      <div id="timer-display" class="text-6xl md:text-7xl font-bold text-white mb-4 font-mono">
+        25:00
+      </div>
+      
+      <!-- Minute Adjustment -->
+      <div class="flex items-center justify-center gap-4 mb-6">
+        <button id="decrease-minutes" class="w-10 h-10 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-primary hover:bg-[#2a2a2a] hover:text-white transition-all duration-300 hover:scale-105">
+          -
+        </button>
+        <span id="minutes-display" class="text-xl text-white">25</span>
+        <button id="increase-minutes" class="w-10 h-10 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-primary hover:bg-[#2a2a2a] hover:text-white transition-all duration-300 hover:scale-105">
+          +
+        </button>
+      </div>
+      
+      <!-- Control Buttons -->
+      <div class="flex items-center justify-center gap-4">
+        <button id="start-timer" class="px-8 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary-hover transition-all duration-300 hover:scale-105 active:scale-95">
+          Start
+        </button>
+        <button id="pause-timer" class="px-8 py-3 bg-[#1a1a1a] border border-[#2a2a2a] text-secondary rounded-lg font-medium hover:bg-[#2a2a2a] hover:text-white transition-all duration-300 hover:scale-105 active:scale-95">
+          Pause
+        </button>
+        <button id="reset-timer" class="px-8 py-3 bg-[#1a1a1a] border border-[#2a2a2a] text-secondary rounded-lg font-medium hover:bg-[#2a2a2a] hover:text-white transition-all duration-300 hover:scale-105 active:scale-95">
+          Reset
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pomodoro Timer JavaScript -->
+<script>
+  // Pomodoro Timer Logic
+  (function() {
+    // Timer elements
+    const timerDisplay = document.getElementById('timer-display');
+    const minutesDisplay = document.getElementById('minutes-display');
+    const startBtn = document.getElementById('start-timer');
+    const pauseBtn = document.getElementById('pause-timer');
+    const resetBtn = document.getElementById('reset-timer');
+    const increaseBtn = document.getElementById('increase-minutes');
+    const decreaseBtn = document.getElementById('decrease-minutes');
+    const pomodoroBtn = document.getElementById('pomodoro-mode');
+    const shortBreakBtn = document.getElementById('short-break-mode');
+    const longBreakBtn = document.getElementById('long-break-mode');
+    const modeBtns = document.querySelectorAll('.mode-btn');
+
+    // Timer settings
+    const POMODORO_TIME = 25;
+    const SHORT_BREAK_TIME = 5;
+    const LONG_BREAK_TIME = 15;
+
+    // Timer state
+    let timeLeft = POMODORO_TIME * 60;
+    let timerInterval = null;
+    let isRunning = false;
+    let currentMode = 'pomodoro';
+    let currentMinutes = POMODORO_TIME;
+
+    // Update timer display
+    function updateDisplay() {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      minutesDisplay.textContent = minutes;
+    }
+
+    // Stop timer
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      isRunning = false;
+    }
+
+    // Start timer
+    function startTimer() {
+      if (isRunning) return;
+      
+      isRunning = true;
+      timerInterval = setInterval(() => {
+        if (timeLeft <= 0) {
+          stopTimer();
+          alert(`⏰ Timer finished! Time for a break!`);
+          
+          // Auto switch to next mode based on current mode
+          if (currentMode === 'pomodoro') {
+            setMode('shortBreak');
+          } else if (currentMode === 'shortBreak' || currentMode === 'longBreak') {
+            setMode('pomodoro');
+          }
+        } else {
+          timeLeft--;
+          updateDisplay();
+        }
+      }, 1000);
+    }
+
+    // Set mode
+    function setMode(mode) {
+      stopTimer();
+      
+      // Update active button styles
+      modeBtns.forEach(btn => {
+        btn.classList.remove('bg-primary', 'text-white');
+        btn.classList.add('bg-[#1a1a1a]', 'text-secondary');
+      });
+      
+      currentMode = mode;
+      
+      switch(mode) {
+        case 'pomodoro':
+          pomodoroBtn.classList.remove('bg-[#1a1a1a]', 'text-secondary');
+          pomodoroBtn.classList.add('bg-primary', 'text-white');
+          timeLeft = POMODORO_TIME * 60;
+          currentMinutes = POMODORO_TIME;
+          break;
+        case 'shortBreak':
+          shortBreakBtn.classList.remove('bg-[#1a1a1a]', 'text-secondary');
+          shortBreakBtn.classList.add('bg-primary', 'text-white');
+          timeLeft = SHORT_BREAK_TIME * 60;
+          currentMinutes = SHORT_BREAK_TIME;
+          break;
+        case 'longBreak':
+          longBreakBtn.classList.remove('bg-[#1a1a1a]', 'text-secondary');
+          longBreakBtn.classList.add('bg-primary', 'text-white');
+          timeLeft = LONG_BREAK_TIME * 60;
+          currentMinutes = LONG_BREAK_TIME;
+          break;
+      }
+      
+      updateDisplay();
+    }
+
+    // Reset timer
+    function resetTimer() {
+      stopTimer();
+      setMode(currentMode);
+    }
+
+    // Increase minutes
+    function increaseMinutes() {
+      if (isRunning) return;
+      currentMinutes++;
+      timeLeft = currentMinutes * 60;
+      updateDisplay();
+    }
+
+    // Decrease minutes
+    function decreaseMinutes() {
+      if (isRunning) return;
+      if (currentMinutes > 1) {
+        currentMinutes--;
+        timeLeft = currentMinutes * 60;
+        updateDisplay();
+      }
+    }
+
+    // Event listeners
+    startBtn.addEventListener('click', startTimer);
+    pauseBtn.addEventListener('click', stopTimer);
+    resetBtn.addEventListener('click', resetTimer);
+    increaseBtn.addEventListener('click', increaseMinutes);
+    decreaseBtn.addEventListener('click', decreaseMinutes);
+    
+    pomodoroBtn.addEventListener('click', () => setMode('pomodoro'));
+    shortBreakBtn.addEventListener('click', () => setMode('shortBreak'));
+    longBreakBtn.addEventListener('click', () => setMode('longBreak'));
+
+    // Initialize
+    updateDisplay();
+  })();
+</script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
