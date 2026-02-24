@@ -7,206 +7,349 @@
     <meta name="description" content="StudyTube - Curated educational content" />
     <title>StudyTube - Educational Video Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  </head>
-  <body>
-    <!-- Pomodoro Timer Section -->
-<section class="max-w-2xl mx-auto px-4 py-8 animate-fadeIn">
-  <div class="bg-[#141414] border border-[#2a2a2a] rounded-2xl p-6 md:p-8 shadow-xl">
-    <h2 class="text-2xl md:text-3xl font-bold text-white mb-6 text-center">
-      <span class="text-primary">Pomodoro</span> Timer
-    </h2>
-    
-    <!-- Mode Selector -->
-    <div class="flex flex-wrap justify-center gap-2 mb-8">
-      <button id="pomodoro-mode" class="mode-btn active px-6 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 bg-primary text-white">
-        Pomodoro
-      </button>
-      <button id="short-break-mode" class="mode-btn px-6 py-2 bg-[#1a1a1a] text-secondary rounded-lg text-sm font-medium hover:bg-[#2a2a2a] hover:text-white transition-all duration-300 hover:scale-105">
-        Short Break
-      </button>
-      <button id="long-break-mode" class="mode-btn px-6 py-2 bg-[#1a1a1a] text-secondary rounded-lg text-sm font-medium hover:bg-[#2a2a2a] hover:text-white transition-all duration-300 hover:scale-105">
-        Long Break
-      </button>
-    </div>
-
-    <!-- Timer Display -->
-    <div class="text-center mb-8">
-      <div id="timer-display" class="text-6xl md:text-7xl font-bold text-white mb-4 font-mono">
-        25:00
-      </div>
-      
-      <!-- Minute Adjustment -->
-      <div class="flex items-center justify-center gap-4 mb-6">
-        <button id="decrease-minutes" class="w-10 h-10 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-primary hover:bg-[#2a2a2a] hover:text-white transition-all duration-300 hover:scale-105">
-          -
-        </button>
-        <span id="minutes-display" class="text-xl text-white">25</span>
-        <button id="increase-minutes" class="w-10 h-10 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-primary hover:bg-[#2a2a2a] hover:text-white transition-all duration-300 hover:scale-105">
-          +
-        </button>
-      </div>
-      
-      <!-- Control Buttons -->
-      <div class="flex items-center justify-center gap-4">
-        <button id="start-timer" class="px-8 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary-hover transition-all duration-300 hover:scale-105 active:scale-95">
-          Start
-        </button>
-        <button id="pause-timer" class="px-8 py-3 bg-[#1a1a1a] border border-[#2a2a2a] text-secondary rounded-lg font-medium hover:bg-[#2a2a2a] hover:text-white transition-all duration-300 hover:scale-105 active:scale-95">
-          Pause
-        </button>
-        <button id="reset-timer" class="px-8 py-3 bg-[#1a1a1a] border border-[#2a2a2a] text-secondary rounded-lg font-medium hover:bg-[#2a2a2a] hover:text-white transition-all duration-300 hover:scale-105 active:scale-95">
-          Reset
-        </button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Pomodoro Timer JavaScript -->
-<script>
-  // Pomodoro Timer Logic
-  (function() {
-    // Timer elements
-    const timerDisplay = document.getElementById('timer-display');
-    const minutesDisplay = document.getElementById('minutes-display');
-    const startBtn = document.getElementById('start-timer');
-    const pauseBtn = document.getElementById('pause-timer');
-    const resetBtn = document.getElementById('reset-timer');
-    const increaseBtn = document.getElementById('increase-minutes');
-    const decreaseBtn = document.getElementById('decrease-minutes');
-    const pomodoroBtn = document.getElementById('pomodoro-mode');
-    const shortBreakBtn = document.getElementById('short-break-mode');
-    const longBreakBtn = document.getElementById('long-break-mode');
-    const modeBtns = document.querySelectorAll('.mode-btn');
-
-    // Timer settings
-    const POMODORO_TIME = 25;
-    const SHORT_BREAK_TIME = 5;
-    const LONG_BREAK_TIME = 15;
-
-    // Timer state
-    let timeLeft = POMODORO_TIME * 60;
-    let timerInterval = null;
-    let isRunning = false;
-    let currentMode = 'pomodoro';
-    let currentMinutes = POMODORO_TIME;
-
-    // Update timer display
-    function updateDisplay() {
-      const minutes = Math.floor(timeLeft / 60);
-      const seconds = timeLeft % 60;
-      timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-      minutesDisplay.textContent = minutes;
-    }
-
-    // Stop timer
-    function stopTimer() {
-      if (timerInterval) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-      }
-      isRunning = false;
-    }
-
-    // Start timer
-    function startTimer() {
-      if (isRunning) return;
-      
-      isRunning = true;
-      timerInterval = setInterval(() => {
-        if (timeLeft <= 0) {
-          stopTimer();
-          alert(`⏰ Timer finished! Time for a break!`);
-          
-          // Auto switch to next mode based on current mode
-          if (currentMode === 'pomodoro') {
-            setMode('shortBreak');
-          } else if (currentMode === 'shortBreak' || currentMode === 'longBreak') {
-            setMode('pomodoro');
-          }
-        } else {
-          timeLeft--;
-          updateDisplay();
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @keyframes fadeScaleIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95) translateY(10px);
         }
-      }, 1000);
-    }
-
-    // Set mode
-    function setMode(mode) {
-      stopTimer();
-      
-      // Update active button styles
-      modeBtns.forEach(btn => {
-        btn.classList.remove('bg-primary', 'text-white');
-        btn.classList.add('bg-[#1a1a1a]', 'text-secondary');
-      });
-      
-      currentMode = mode;
-      
-      switch(mode) {
-        case 'pomodoro':
-          pomodoroBtn.classList.remove('bg-[#1a1a1a]', 'text-secondary');
-          pomodoroBtn.classList.add('bg-primary', 'text-white');
-          timeLeft = POMODORO_TIME * 60;
-          currentMinutes = POMODORO_TIME;
-          break;
-        case 'shortBreak':
-          shortBreakBtn.classList.remove('bg-[#1a1a1a]', 'text-secondary');
-          shortBreakBtn.classList.add('bg-primary', 'text-white');
-          timeLeft = SHORT_BREAK_TIME * 60;
-          currentMinutes = SHORT_BREAK_TIME;
-          break;
-        case 'longBreak':
-          longBreakBtn.classList.remove('bg-[#1a1a1a]', 'text-secondary');
-          longBreakBtn.classList.add('bg-primary', 'text-white');
-          timeLeft = LONG_BREAK_TIME * 60;
-          currentMinutes = LONG_BREAK_TIME;
-          break;
+        to {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
       }
       
-      updateDisplay();
-    }
-
-    // Reset timer
-    function resetTimer() {
-      stopTimer();
-      setMode(currentMode);
-    }
-
-    // Increase minutes
-    function increaseMinutes() {
-      if (isRunning) return;
-      currentMinutes++;
-      timeLeft = currentMinutes * 60;
-      updateDisplay();
-    }
-
-    // Decrease minutes
-    function decreaseMinutes() {
-      if (isRunning) return;
-      if (currentMinutes > 1) {
-        currentMinutes--;
-        timeLeft = currentMinutes * 60;
-        updateDisplay();
+      @keyframes pulseGlow {
+        0%, 100% {
+          box-shadow: 0 0 10px rgba(107, 114, 128, 0.3);
+        }
+        50% {
+          box-shadow: 0 0 20px rgba(107, 114, 128, 0.5);
+        }
       }
-    }
-
-    // Event listeners
-    startBtn.addEventListener('click', startTimer);
-    pauseBtn.addEventListener('click', stopTimer);
-    resetBtn.addEventListener('click', resetTimer);
-    increaseBtn.addEventListener('click', increaseMinutes);
-    decreaseBtn.addEventListener('click', decreaseMinutes);
-    
-    pomodoroBtn.addEventListener('click', () => setMode('pomodoro'));
-    shortBreakBtn.addEventListener('click', () => setMode('shortBreak'));
-    longBreakBtn.addEventListener('click', () => setMode('longBreak'));
-
-    // Initialize
-    updateDisplay();
-  })();
-</script>
+      
+      @keyframes timerPulse {
+        0%, 100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.02);
+        }
+      }
+      
+      .pomodoro-popup {
+        animation: fadeScaleIn 0.2s ease-out;
+        transform-origin: bottom right;
+      }
+      
+      .timer-pulse {
+        animation: timerPulse 2s ease-in-out infinite;
+      }
+      
+      .glow-animation {
+        animation: pulseGlow 2s ease-in-out infinite;
+      }
+      
+      .mode-transition {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      
+      .time-change {
+        animation: fadeScaleIn 0.2s ease-out;
+      }
+    </style>
+  </head>
+  <body class="bg-[#0d0d0d]">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Floating Pomodoro Timer Widget -->
+    <!-- Floating Icon -->
+    <button id="pomodoro-float-icon" class="fixed bottom-6 right-6 w-14 h-14 bg-[#1a1a1a] border border-[#2a2a2a] rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 transition-all duration-300 z-50 group glow-animation">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="12 6 12 12 16 14"/>
+      </svg>
+      <span class="absolute -top-1 -right-1 w-3 h-3 bg-primary rounded-full animate-ping"></span>
+    </button>
+
+    <!-- Pomodoro Popup -->
+    <div id="pomodoro-popup" class="fixed bottom-24 right-6 w-[320px] bg-[#141414] border border-[#2a2a2a] rounded-2xl shadow-2xl z-50 hidden pomodoro-popup">
+      <div class="p-5">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-white">Pomodoro Timer</h3>
+          <button id="close-popup" class="text-secondary hover:text-white transition-colors hover:rotate-90 transform duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Mode Selector -->
+        <div class="flex gap-1 mb-5 bg-[#1a1a1a] p-1 rounded-lg">
+          <button id="work-mode" class="mode-btn mode-transition flex-1 px-3 py-2 rounded-md text-xs font-medium bg-primary text-white">
+            Work
+          </button>
+          <button id="short-break-mode" class="mode-btn mode-transition flex-1 px-3 py-2 rounded-md text-xs font-medium bg-[#1a1a1a] text-secondary hover:bg-[#2a2a2a] hover:text-white">
+            Short
+          </button>
+          <button id="long-break-mode" class="mode-btn mode-transition flex-1 px-3 py-2 rounded-md text-xs font-medium bg-[#1a1a1a] text-secondary hover:bg-[#2a2a2a] hover:text-white">
+            Long
+          </button>
+        </div>
+
+        <!-- Timer Display -->
+        <div class="text-center mb-5">
+          <div id="timer-display" class="text-5xl font-bold text-white mb-2 font-mono timer-pulse">25:00</div>
+          <div id="adjust-hint" class="text-xs text-secondary">+/- only available in Work mode</div>
+        </div>
+
+        <!-- Time Adjustment -->
+        <div class="flex items-center justify-center gap-3 mb-5">
+          <button id="decrease-time" class="w-10 h-10 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-primary hover:bg-[#2a2a2a] hover:text-white transition-all duration-300 hover:scale-105 active:scale-95 text-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed">
+            -
+          </button>
+          <span id="minutes-display" class="text-lg text-white w-12 text-center mode-transition">25</span>
+          <button id="increase-time" class="w-10 h-10 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-primary hover:bg-[#2a2a2a] hover:text-white transition-all duration-300 hover:scale-105 active:scale-95 text-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed">
+            +
+          </button>
+        </div>
+
+        <!-- Control Buttons -->
+        <div class="flex gap-2">
+          <button id="start-timer" class="flex-1 px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-hover transition-all duration-300 hover:scale-105 active:scale-95 relative overflow-hidden group">
+            <span class="relative z-10">Start</span>
+            <span class="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-100 transition-transform duration-500"></span>
+          </button>
+          <button id="pause-timer" class="flex-1 px-4 py-2.5 bg-[#1a1a1a] border border-[#2a2a2a] text-secondary rounded-lg text-sm font-medium hover:bg-[#2a2a2a] hover:text-white transition-all duration-300 hover:scale-105 active:scale-95">
+            Pause
+          </button>
+          <button id="reset-timer" class="flex-1 px-4 py-2.5 bg-[#1a1a1a] border border-[#2a2a2a] text-secondary rounded-lg text-sm font-medium hover:bg-[#2a2a2a] hover:text-white transition-all duration-300 hover:scale-105 active:scale-95">
+            Reset
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pomodoro Timer JavaScript -->
+    <script>
+      (function() {
+        // DOM Elements
+        const floatIcon = document.getElementById('pomodoro-float-icon');
+        const popup = document.getElementById('pomodoro-popup');
+        const closeBtn = document.getElementById('close-popup');
+        
+        const timerDisplay = document.getElementById('timer-display');
+        const minutesDisplay = document.getElementById('minutes-display');
+        const adjustHint = document.getElementById('adjust-hint');
+        
+        const startBtn = document.getElementById('start-timer');
+        const pauseBtn = document.getElementById('pause-timer');
+        const resetBtn = document.getElementById('reset-timer');
+        const increaseBtn = document.getElementById('increase-time');
+        const decreaseBtn = document.getElementById('decrease-time');
+        
+        const workBtn = document.getElementById('work-mode');
+        const shortBreakBtn = document.getElementById('short-break-mode');
+        const longBreakBtn = document.getElementById('long-break-mode');
+        const modeBtns = document.querySelectorAll('.mode-btn');
+
+        // Timer settings
+        const WORK_TIME = 25;
+        const SHORT_BREAK_TIME = 5;
+        const LONG_BREAK_TIME = 15;
+
+        // Timer state
+        let timeLeft = WORK_TIME * 60;
+        let timerInterval = null;
+        let isRunning = false;
+        let currentMode = 'work';
+        let currentMinutes = WORK_TIME;
+
+        // Update display
+        function updateDisplay() {
+          const minutes = Math.floor(timeLeft / 60);
+          const seconds = timeLeft % 60;
+          timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+          minutesDisplay.textContent = minutes;
+          
+          // Add animation class
+          timerDisplay.classList.add('time-change');
+          setTimeout(() => timerDisplay.classList.remove('time-change'), 200);
+        }
+
+        // Stop timer
+        function stopTimer() {
+          if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+          }
+          isRunning = false;
+        }
+
+        // Start timer
+        function startTimer() {
+          if (isRunning) return;
+          
+          isRunning = true;
+          timerInterval = setInterval(() => {
+            if (timeLeft <= 0) {
+              stopTimer();
+              alert(`⏰ Timer finished!`);
+              
+              // Auto switch to next mode with animation
+              if (currentMode === 'work') {
+                setMode('shortBreak');
+              } else {
+                setMode('work');
+              }
+            } else {
+              timeLeft--;
+              updateDisplay();
+            }
+          }, 1000);
+        }
+
+        // Update adjustment buttons state based on mode
+        function updateAdjustButtons() {
+          const isWorkMode = currentMode === 'work';
+          increaseBtn.disabled = !isWorkMode;
+          decreaseBtn.disabled = !isWorkMode;
+          
+          // Update hint text
+          if (isWorkMode) {
+            adjustHint.textContent = '+/- to adjust by 10 min';
+            adjustHint.classList.remove('text-secondary');
+            adjustHint.classList.add('text-primary');
+          } else {
+            adjustHint.textContent = '+/- only available in Work mode';
+            adjustHint.classList.remove('text-primary');
+            adjustHint.classList.add('text-secondary');
+          }
+        }
+
+        // Set mode
+        function setMode(mode) {
+          stopTimer();
+          
+          // Update button styles with transition
+          modeBtns.forEach(btn => {
+            btn.classList.remove('bg-primary', 'text-white');
+            btn.classList.add('bg-[#1a1a1a]', 'text-secondary');
+          });
+          
+          currentMode = mode;
+          
+          switch(mode) {
+            case 'work':
+              workBtn.classList.remove('bg-[#1a1a1a]', 'text-secondary');
+              workBtn.classList.add('bg-primary', 'text-white');
+              timeLeft = WORK_TIME * 60;
+              currentMinutes = WORK_TIME;
+              break;
+            case 'shortBreak':
+              shortBreakBtn.classList.remove('bg-[#1a1a1a]', 'text-secondary');
+              shortBreakBtn.classList.add('bg-primary', 'text-white');
+              timeLeft = SHORT_BREAK_TIME * 60;
+              currentMinutes = SHORT_BREAK_TIME;
+              break;
+            case 'longBreak':
+              longBreakBtn.classList.remove('bg-[#1a1a1a]', 'text-secondary');
+              longBreakBtn.classList.add('bg-primary', 'text-white');
+              timeLeft = LONG_BREAK_TIME * 60;
+              currentMinutes = LONG_BREAK_TIME;
+              break;
+          }
+          
+          updateDisplay();
+          updateAdjustButtons();
+        }
+
+        // Reset timer
+        function resetTimer() {
+          stopTimer();
+          setMode(currentMode);
+          
+          // Add pulse animation to reset button
+          resetBtn.classList.add('scale-105');
+          setTimeout(() => resetBtn.classList.remove('scale-105'), 200);
+        }
+
+        // Increase time by 10 minutes (only for work mode)
+        function increaseTime() {
+          if (isRunning || currentMode !== 'work') return;
+          currentMinutes += 10;
+          timeLeft = currentMinutes * 60;
+          updateDisplay();
+          
+          // Add animation to minutes display
+          minutesDisplay.classList.add('text-primary', 'scale-110');
+          setTimeout(() => {
+            minutesDisplay.classList.remove('text-primary', 'scale-110');
+          }, 200);
+        }
+
+        // Decrease time by 10 minutes (minimum 1 minute, only for work mode)
+        function decreaseTime() {
+          if (isRunning || currentMode !== 'work') return;
+          if (currentMinutes > 10) {
+            currentMinutes -= 10;
+          } else {
+            currentMinutes = 1;
+          }
+          timeLeft = currentMinutes * 60;
+          updateDisplay();
+          
+          // Add animation to minutes display
+          minutesDisplay.classList.add('text-primary', 'scale-110');
+          setTimeout(() => {
+            minutesDisplay.classList.remove('text-primary', 'scale-110');
+          }, 200);
+        }
+
+        // Toggle popup
+        function togglePopup() {
+          if (popup.classList.contains('hidden')) {
+            popup.classList.remove('hidden');
+            // Add entrance animation
+            popup.style.animation = 'none';
+            popup.offsetHeight;
+            popup.style.animation = 'fadeScaleIn 0.2s ease-out';
+          } else {
+            popup.classList.add('hidden');
+          }
+        }
+
+        // Close popup when clicking outside
+        document.addEventListener('click', function(event) {
+          if (!popup.classList.contains('hidden') && 
+              !popup.contains(event.target) && 
+              !floatIcon.contains(event.target)) {
+            popup.classList.add('hidden');
+          }
+        });
+
+        // Event listeners
+        floatIcon.addEventListener('click', togglePopup);
+        closeBtn.addEventListener('click', () => popup.classList.add('hidden'));
+        
+        startBtn.addEventListener('click', startTimer);
+        pauseBtn.addEventListener('click', stopTimer);
+        resetBtn.addEventListener('click', resetTimer);
+        increaseBtn.addEventListener('click', increaseTime);
+        decreaseBtn.addEventListener('click', decreaseTime);
+        
+        workBtn.addEventListener('click', () => setMode('work'));
+        shortBreakBtn.addEventListener('click', () => setMode('shortBreak'));
+        longBreakBtn.addEventListener('click', () => setMode('longBreak'));
+
+        // Initialize
+        updateDisplay();
+        updateAdjustButtons();
+      })();
+    </script>
   </body>
 </html>
