@@ -8,8 +8,12 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#e66e23',
-          hover: '#cf5f1c',
+          DEFAULT: '#6b7280',     // grey-500
+          hover: '#4b5563',        // grey-600
+        },
+        accent: {
+          DEFAULT: '#9ca3af',      // grey-400
+          hover: '#6b7280',        // grey-500
         },
       },
       backgroundColor: {
@@ -42,7 +46,7 @@ export default {
         },
       },
       boxShadow: {
-        'glow': '0 0 15px rgba(230, 110, 35, 0.3)',
+        'glow': '0 0 15px rgba(107, 114, 128, 0.3)', // grey glow
       },
     },
   },

@@ -66,14 +66,14 @@ const Search = () => {
                 placeholder="Search for videos..."
                 className="w-full px-6 py-4 bg-[#141414] border border-[#2a2a2a] rounded-2xl
                          text-white placeholder-gray-500
-                         focus:outline-none focus:ring-2 focus:ring-[#e66e23] focus:border-transparent
-                         transition-all duration-300 group-hover:border-[#e66e23]/50"
+                         focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent
+                         transition-all duration-300 group-hover:border-primary/50"
               />
               <button
                 type="submit"
                 className="absolute right-3 top-1/2 transform -translate-y-1/2
-                         px-6 py-2 bg-[#e66e23] text-white rounded-xl
-                         hover:bg-[#cf5f1c] transition-all duration-300
+                         px-6 py-2 bg-primary text-white rounded-xl
+                         hover:bg-primary-hover transition-all duration-300
                          hover:scale-105 active:scale-95"
               >
                 Search
@@ -88,7 +88,7 @@ const Search = () => {
                 key={term}
                 to={`/search?q=${encodeURIComponent(term)}`}
                 className="px-4 py-2 bg-[#141414] border border-[#2a2a2a] rounded-xl
-                         text-gray-400 hover:text-white hover:border-[#e66e23]
+                         text-gray-400 hover:text-white hover:border-primary
                          transition-all duration-300 hover:scale-105"
               >
                 {term}
@@ -139,8 +139,8 @@ const Search = () => {
           <p className="text-gray-400 mb-6">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="px-6 py-3 bg-[#e66e23] text-white rounded-xl
-                     hover:bg-[#cf5f1c] transition-all duration-300
+            className="px-6 py-3 bg-primary text-white rounded-xl
+                     hover:bg-primary-hover transition-all duration-300
                      hover:scale-105 active:scale-95"
           >
             Try Again
@@ -168,7 +168,7 @@ const Search = () => {
           <button
             onClick={() => setShowFilters(!showFilters)}
             className="flex items-center gap-2 px-4 py-2 bg-[#141414] border border-[#2a2a2a] rounded-xl
-                     text-gray-400 hover:text-white hover:border-[#e66e23]
+                     text-gray-400 hover:text-white hover:border-primary
                      transition-all duration-300 hover:scale-105 active:scale-95"
           >
             <FaFilter className={`transition-transform duration-300 ${showFilters ? 'rotate-180' : ''}`} />
@@ -184,7 +184,7 @@ const Search = () => {
                 <button
                   key={period}
                   className="px-4 py-2 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg
-                           text-gray-400 hover:text-white hover:border-[#e66e23]
+                           text-gray-400 hover:text-white hover:border-primary
                            transition-all duration-300 hover:scale-105"
                 >
                   {period === 'all' ? 'All Time' : period}
